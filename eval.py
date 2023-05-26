@@ -25,7 +25,7 @@ topo_correct = topology()
 
 
 def seg2surf(seg,
-             data_name='hcp',
+             data_name='fetal',
              sigma=0.5,
              alpha=16,
              level=0.8,
@@ -68,10 +68,7 @@ def seg2surf(seg,
     # but the affine matrix of the MRI was not changed.
     # So this bias is caused by the different between 
     # the original and new affine matrix.
-    if data_name == 'hcp':
-        v_mc = v_mc + [0.0090, 0.0058, 0.0088]
-    elif data_name == 'adni':
-        v_mc = v_mc + [0.0090, 0.0000, 0.0095]
+    
         
     # ------ mesh smoothing ------
     v_mc = torch.Tensor(v_mc).unsqueeze(0).to(device)
@@ -136,15 +133,12 @@ if __name__ == '__main__':
         subid = subject_list[i]
 
         # ------- load brain MRI ------- 
-        if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 255.).astype(np.float32)
+        
             
             
             
             
-        elif data_name == 'dhcp':
+        if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             
             brain_arr = brain.get_fdata()
@@ -279,13 +273,8 @@ if __name__ == '__main__':
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
-            if data_name == 'hcp':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
-            elif data_name == 'adni':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
-            elif data_name == 'dhcp':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
@@ -320,7 +309,7 @@ if __name__ == '__main__':
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
-            if data_name == 'dhcp':  # the resolution is 0.7
+            if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
                 hd_wm = 0.5*hd_wm

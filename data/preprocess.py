@@ -13,82 +13,43 @@ for a new dataset, but the matching is important to make everything work.
 
 import numpy as np
 
-def process_volume(x, data_name='hcp'):
+def process_volume(x, data_name='fetal'):
 
-    if data_name == 'hcp':
-        x = x.transpose(1,2,0)
-        x = x[::-1,:,:]
-        x = x[:,:,::-1]
-        return x[None, 32:-32, 16:-16, 32:-32].copy()
-    elif data_name == 'adni':
-        x = x.transpose(1,2,0)
-        x = x[::-1,:,:]
-        x = x[:,:,::-1]
-        return x[None, 40:-40, 24:-24, 40:-40].copy()
-    elif data_name == 'dhcp':
+    
+    if data_name == 'fetal':
         x = np.pad(x, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
         return x[None].copy()
     else:
-        raise ValueError("data_name should be in ['hcp','adni','dhcp']")
+        raise ValueError("data_name should be in ['fetal']")
 
 
-def process_surface(v, f, data_name='hcp'):
+def process_surface(v, f, data_name='fetal'):
     f = f.astype(np.float32)
     
-    if data_name == 'hcp':
-        v = v[:,[0,2,1]].copy()
-        # clip the surface according to the volume
-        v[:,0] = v[:,0] - 32
-        v[:,1] = - v[:,1] - 15
-        v[:,2] = v[:,2] - 32
-        # normalize to [-1, 1]
-        v = v + 128
-        v = (v - [96, 112, 96]) / 112
-    elif data_name == 'adni':
-        # clip the surface according to the volume
-        v[:,0] = v[:,0] - 40
-        v[:,1] = v[:,1] - 24
-        v[:,2] = v[:,2] - 40
-        # normalize to [-1, 1]
-        v = v + 128
-        v = (v - [88, 104, 88]) / 104
-    elif data_name == 'dhcp':
+    
+    if data_name == 'fetal':
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
         v = (v - [104, 104, 78]) / 104
     else:
-        raise ValueError("data_name should be in ['hcp','adni','dhcp']")
+        raise ValueError("data_name should be in ['fetal']")
 
     return v, f
 
 
-def process_surface_inverse(v, f, data_name='hcp'):
+def process_surface_inverse(v, f, data_name='fetal'):
     """
     inversed preprocessing to transform the surface to its original space
     """
     
-    if data_name == 'hcp':
-        v = v * 112 + [96, 112, 96]
-        v = v - 128
-        v[:,2] = v[:,2] + 32
-        v[:,1] = v[:,1] + 15
-        v[:,1] = - v[:,1]
-        v[:,0] = v[:,0] + 32
-        v = v[:,[0,2,1]].copy()
-
-    elif data_name == 'adni':
-        v = v *104 + [88, 104, 88]
-        v = v - 128
-        v[:,0] = v[:,0] + 40
-        v[:,1] = v[:,1] + 24
-        v[:,2] = v[:,2] + 40
+    
         
-    elif data_name == 'dhcp':
+    if data_name == 'fetal':
         v = v * 104 + [104, 104, 78]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()        
     else:
-        raise ValueError("data_name should be in ['hcp','adni','dhcp']")
+        raise ValueError("data_name should be in ['fetal']")
 
     return v, f

@@ -54,23 +54,9 @@ def load_seg_data(config, data_usage='train'):
     for i in tqdm(range(len(subject_list))):
         subid = subject_list[i]
 
-        if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 255.).astype(np.float32)
-            brain_arr = process_volume(brain_arr, data_name)
-
-            seg = nib.load(data_dir+subid+'/mri/ribbon.mgz')
-            seg_arr = seg.get_fdata()
-            seg_arr = process_volume(seg_arr, data_name)[0]
-            seg_left = (seg_arr == 2).astype(int)    # left wm
-            seg_right = (seg_arr == 41).astype(int)  # right wm
-
-            seg_arr = np.zeros_like(seg_left, dtype=int)  # final label
-            seg_arr += 1 * seg_left
-            seg_arr += 2 * seg_right
+        
     
-        elif data_name == 'dhcp':
+        if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 20).astype(np.float32)
@@ -162,11 +148,8 @@ def load_surf_data(config, data_usage='train'):
         subid = subject_list[i]
         
         # ------- load brain MRI ------- 
-        if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 255.).astype(np.float32)
-        elif data_name == 'dhcp':
+        
+        if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 1500.).astype(np.float16)
@@ -180,12 +163,8 @@ def load_surf_data(config, data_usage='train'):
             v_in, f_in = mesh_in.vertices, mesh_in.faces
             
             # ------- load gt surface ------- 
-            if data_name == 'hcp':
-                # depends on your FreeSurfer version
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
-            elif data_name == 'adni':
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-            elif data_name == 'dhcp':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     v_gt, f_gt = surf_gt.agg_data('pointset'), surf_gt.agg_data('triangle')
@@ -202,12 +181,8 @@ def load_surf_data(config, data_usage='train'):
         elif surf_type == 'gm':
             # ------- load input surface ------- 
             # input is wm surface
-            if data_name == 'hcp':
-                # depends on your FreeSurfer version
-                v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
-            elif data_name == 'adni':
-                v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-            elif data_name == 'dhcp':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_in = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     v_in, f_in = surf_in.agg_data('pointset'), surf_in.agg_data('triangle')
@@ -230,11 +205,8 @@ def load_surf_data(config, data_usage='train'):
             f_in = f_in.cpu().numpy()[0]
             
             # ------- load gt surface ------- 
-            if data_name == 'hcp':
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
-            elif data_name == 'adni':
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
-            elif data_name == 'dhcp':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
                     v_gt, f_gt = surf_gt.agg_data('pointset'), surf_gt.agg_data('triangle')
