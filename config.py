@@ -9,7 +9,7 @@ def load_config():
     # for training
     parser.add_argument('--data_dir', default="../dataset/hcp600/", type=str, help="directory of the dataset")
     parser.add_argument('--model_dir', default="./ckpts/model/", type=str, help="directory for saving the models")
-    parser.add_argument('--data_name', default="hcp", type=str, help="name of the dataset")
+    parser.add_argument('--data_name', default="fetal", type=str, help="name of the dataset")
     parser.add_argument('--train_type', default="surf", type=str, help="type of training: [seg, surf]")
     parser.add_argument('--surf_type', default="wm", type=str, help="type of the surface: [wm, gm]")
     parser.add_argument('--surf_hemi', default="lh", type=str, help="left or right hemisphere: [lh, rh]")
