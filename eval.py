@@ -153,8 +153,8 @@ if __name__ == '__main__':
             max_value = np.max(brain_arr)
 
 # Define the desired range for voxel intensities
-            desired_min = 100  # Update with your desired minimum intensity value
-            desired_max = 800  # Update with your desired maximum intensity value
+            desired_min = 0  # Update with your desired minimum intensity value
+            desired_max = 1  # Update with your desired maximum intensity value
 
 # Calculate the scaling factor
             scaling_factor = (desired_max - desired_min) / (max_value - min_value)
