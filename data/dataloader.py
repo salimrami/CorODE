@@ -181,6 +181,7 @@ def load_surf_data(config, data_usage='train'):
             
             
             brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min).astype(np.float16)
+            brain_arr = (brain_arr / 20).astype(np.float16)
             
         brain_arr = process_volume(brain_arr, data_name)
             

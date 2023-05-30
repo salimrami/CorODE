@@ -166,7 +166,8 @@ if __name__ == '__main__':
             
             
             
-            brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min).astype(np.float16)
+            brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min)
+            brain_arr = (brain_arr / 20).astype(np.float16)
             
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
