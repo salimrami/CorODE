@@ -173,7 +173,7 @@ def load_surf_data(config, data_usage='train'):
 
 # Define the desired range for voxel intensities
             desired_min = 0  # Update with your desired minimum intensity value
-            desired_max = 40  # Update with your desired maximum intensity value
+            desired_max = 255  # Update with your desired maximum intensity value
 
 # Calculate the scaling factor
             scaling_factor = (desired_max - desired_min) / (max_value - min_value)
