@@ -145,12 +145,15 @@ if __name__ == '__main__':
             #brain_arr = (brain_arr / 1500.).astype(np.float16)
        #brain_arr = process_volume(brain_arr, data_name)
         #volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
+        #calculer min et max adni 
             
             
             
             
             min_value = np.min(brain_arr)
+            print("le min : ",min_value)
             max_value = np.max(brain_arr)
+            print("le max : ",max_value)
 
 # Define the desired range for voxel intensities
             desired_min = 0  # Update with your desired minimum intensity value
