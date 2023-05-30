@@ -172,8 +172,8 @@ def load_surf_data(config, data_usage='train'):
             print("le median : ",median)
 
 # Define the desired range for voxel intensities
-            desired_min = -1  # Update with your desired minimum intensity value
-            desired_max = 1  # Update with your desired maximum intensity value
+            desired_min = 0  # Update with your desired minimum intensity value
+            desired_max = 35  # Update with your desired maximum intensity value
 
 # Calculate the scaling factor
             scaling_factor = (desired_max - desired_min) / (max_value - min_value)
@@ -181,6 +181,7 @@ def load_surf_data(config, data_usage='train'):
             
             
             brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min).astype(np.float16)
+            brain_arr = (brain_arr / 20).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
             
             
