@@ -25,7 +25,7 @@ topo_correct = topology()
 
 
 def seg2surf(seg,
-             data_name='hcp',
+             data_name='fetal',
              sigma=0.5,
              alpha=16,
              level=0.8,
@@ -68,10 +68,7 @@ def seg2surf(seg,
     # but the affine matrix of the MRI was not changed.
     # So this bias is caused by the different between 
     # the original and new affine matrix.
-    if data_name == 'hcp':
-        v_mc = v_mc + [0.0090, 0.0058, 0.0088]
-    elif data_name == 'adni':
-        v_mc = v_mc + [0.0090, 0.0000, 0.0095]
+    
         
     # ------ mesh smoothing ------
     v_mc = torch.Tensor(v_mc).unsqueeze(0).to(device)
@@ -108,8 +105,8 @@ if __name__ == '__main__':
     rho = config.rho # inflation scale
 
     # ------ load models ------
-    segnet = Unet(c_in=1, c_out=3).to(device)
-    segnet = "/scratch/saiterrami/seg/seg_img.nii.gz"
+    segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
+    #segnet = Unet(c_in=1, c_out=3).to(device)
     segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
     if test_type == 'pred' or test_type == 'eval':
@@ -137,38 +134,44 @@ if __name__ == '__main__':
         subid = subject_list[i]
 
         # ------- load brain MRI ------- 
-        if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 255.).astype(np.float32)
+        
             
             
             
             
-        elif data_name == 'dhcp':
+        if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 1500.).astype(np.float16)
-        brain_arr = process_volume(brain_arr, data_name)
-        volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
+            #brain_arr = (brain_arr / 1500.).astype(np.float16)
+       #brain_arr = process_volume(brain_arr, data_name)
+        #volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
+        #calculer min et max adni 
             
             
             
             
-            #min_value = np.min(brain_arr)
-            #max_value = np.max(brain_arr)
+            min_value = np.min(brain_arr)
+            print("le min : ",min_value)
+            max_value = np.max(brain_arr)
+            print("le max : ",max_value)
+            median =np.mean(brain_arr)
+            print("le median : ",median)
 
 # Define the desired range for voxel intensities
-            #desired_min = 0  # Update with your desired minimum intensity value
-            #desired_max = 255  # Update with your desired maximum intensity value
+            desired_min = 0  # Update with your desired minimum intensity value
+            desired_max = 255  # Update with your desired maximum intensity value
 
 # Calculate the scaling factor
-            #scaling_factor = (desired_max - desired_min) / (max_value - min_value)
+            scaling_factor = (desired_max - desired_min) / (max_value - min_value)
             
             
             
-            #brain_arr = (((brain_arr - min_value) * scaling_factor + desired_min).astype(np.float16))
+            brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min)
+            brain_arr = (brain_arr / 20).astype(np.float16)
+            
+        brain_arr = process_volume(brain_arr, data_name)
+        volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
             
 
         # ------- predict segmentation ------- 
@@ -185,25 +188,25 @@ if __name__ == '__main__':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
                 seg = seg[2:-2, :, :]  # Remove padding
                 
-                seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
+                #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
         
         # Generate the file name with counter
-                file_name = f'lh_segmentation{counter}.nii.gz'
+               # file_name = f'lh_segmentation{counter}.nii.gz'
         
-                nib.save(seg_img, file_name)  # Save predicted segmentation
+                #nib.save(seg_img, file_name)  # Save predicted segmentation
         
-                counter += 1  # Increment the counter for the next segmentation
+                #counter += 1  # Increment the counter for the next segmentation
                
                 
             
                 
-            elif surf_hemi == 'rh':
-                seg = (seg_pred==2).cpu().numpy()  # rh
-                seg = seg[2:-2, :, :]  # Remove padding
-                seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
-                print(seg_img.shape)
+           # elif surf_hemi == 'rh':
+            #    seg = (seg_pred==2).cpu().numpy()  # rh
+             #   seg = seg[2:-2, :, :]  # Remove padding
+              #  seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
+               # print(seg_img.shape)
 
-                nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
+                #nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
 
       
 
@@ -280,13 +283,8 @@ if __name__ == '__main__':
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
-            if data_name == 'hcp':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
-            elif data_name == 'adni':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
-            elif data_name == 'dhcp':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
@@ -321,7 +319,7 @@ if __name__ == '__main__':
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
-            if data_name == 'dhcp':  # the resolution is 0.7
+            if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
                 hd_wm = 0.5*hd_wm
@@ -382,3 +380,4 @@ if __name__ == '__main__':
         print('sif std:', np.std(sif_gm_all))
        
 """   # ------- report the final results ------- 
+ 
