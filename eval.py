@@ -105,8 +105,20 @@ if __name__ == '__main__':
     rho = config.rho # inflation scale
 
     # ------ load models ------
-    segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
-    print(segnet)
+    
+    
+# Specify the path to the segmentation model file
+    segnet_file = "/scratch/saiterrami/seg/model_seg_fetal_pretrained.pt"
+
+# Load the segmentation model
+    segnet = torch.load(segnet_file)
+
+# Move the segmentation model to the desired device
+    segnet = segnet.to(device)
+    
+    
+    #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
+    #print(segnet)
     #segnet = Unet(c_in=1, c_out=3).to(device)
     segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
