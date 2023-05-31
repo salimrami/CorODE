@@ -108,10 +108,8 @@ if __name__ == '__main__':
     
     
 # Specify the path to the segmentation model file
-    segnet_file = "/scratch/saiterrami/seg/model_seg_fetal_pretrained.pt"
-
-# Load the segmentation model
-    segnet = torch.load(segnet_file)
+    segnet_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
+    segnet = nib.load(segnet_file).get_fdata()
 
 # Move the segmentation model to the desired device
     segnet = segnet.to(device)
