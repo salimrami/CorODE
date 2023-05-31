@@ -114,6 +114,9 @@ if __name__ == '__main__':
 # Convert the segmentation data to a PyTorch tensor
     segnet = torch.from_numpy(segnet_data).to(device)
 
+# Convert the segmentation data to a PyTorch tensor
+    #segnet = torch.from_numpy(segnet_data).to(device)
+
 # Move the segmentation model to the desired device
     #segnet = segnet.to(device)
     
