@@ -112,7 +112,7 @@ if __name__ == '__main__':
     segnet = nib.load(segnet_file).get_fdata()
 
 # Move the segmentation model to the desired device
-    segnet = segnet.to(device)
+    #segnet = segnet.to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
