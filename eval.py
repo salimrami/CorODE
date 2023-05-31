@@ -107,7 +107,7 @@ if __name__ == '__main__':
     # ------ load models ------
     segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
     #segnet = Unet(c_in=1, c_out=3).to(device)
-    segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
+    #segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
     if test_type == 'pred' or test_type == 'eval':
         T = torch.Tensor([0,1]).to(device)
