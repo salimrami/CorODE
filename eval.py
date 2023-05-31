@@ -109,7 +109,10 @@ if __name__ == '__main__':
     
 # Specify the path to the segmentation model file
     segnet_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
-    segnet = nib.load(segnet_file).get_fdata()
+    segnet_data = nib.load(segnet_file).get_fdata()
+
+# Convert the segmentation data to a PyTorch tensor
+    segnet = torch.from_numpy(segnet_data).to(device)
 
 # Move the segmentation model to the desired device
     #segnet = segnet.to(device)
