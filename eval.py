@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     # ------ load models ------
     segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
-    print("lol",segnet.size)
+    print(segnet)
     #segnet = Unet(c_in=1, c_out=3).to(device)
     segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
