@@ -53,3 +53,9 @@ def process_surface_inverse(v, f, data_name='fetal'):
         raise ValueError("data_name should be in ['fetal']")
 
     return v, f
+def process_segmentation(seg, data_name='fetal'):
+    if data_name == 'fetal':
+        seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
+        return seg[None].copy()
+    else:
+        raise ValueError("data_name should be in ['fetal']")
