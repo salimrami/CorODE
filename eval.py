@@ -106,17 +106,13 @@ if __name__ == '__main__':
 
     # ------ load models ------
     
-    segnet_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
+    seg_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
 
-# Load the segmentation data from the file
-    segnet_data = nib.load(segnet_file).get_fdata()
+# Load the segmentation data
+    seg_data = nib.load(seg_file).get_fdata()
 
 # Convert the segmentation data to a PyTorch tensor
-    segnet = torch.from_numpy(segnet_data)
-
-# Move the segmentation model to the desired device
-    device = torch.device("cuda" )
-    segnet = segnet.to(device)
+    segnet = torch.from_numpy(seg_data).to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
@@ -197,12 +193,11 @@ if __name__ == '__main__':
 
         with torch.no_grad():
             volume_in = volume_in.unsqueeze(0)  # Add a batch dimension
-            seg_out = segnet.forward(volume_in)
-            seg_pred = torch.argmax(seg_out, dim=1)[0]
+            seg_pred = segnet[0]  # Assuming the segmentation data is stored in the first channel
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
-                seg = seg[2:-2, :, :]  # Remove paddin
+                seg = seg[2:-2, :, :]  # Remove padding
                     
                 #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
         
