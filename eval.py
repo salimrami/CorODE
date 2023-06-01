@@ -196,6 +196,7 @@ if __name__ == '__main__':
             
 
         with torch.no_grad():
+            volume_in = volume_in.unsqueeze(0)  # Add a batch dimension
             seg_out = segnet(volume_in)
             seg_pred = torch.argmax(seg_out, dim=1)[0]
             counter = 1  # Initialize the counter
