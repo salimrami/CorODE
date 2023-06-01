@@ -197,13 +197,13 @@ if __name__ == '__main__':
 
         with torch.no_grad():
             volume_in = volume_in.unsqueeze(0)  # Add a batch dimension
-            seg_out = segnet(volume_in)
+            seg_out = segnet.forward(volume_in)
             seg_pred = torch.argmax(seg_out, dim=1)[0]
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
-                seg = seg[2:-2, :, :]  # Remove padding
-                
+                seg = seg[2:-2, :, :]  # Remove paddin
+                    
                 #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
         
         # Generate the file name with counter
