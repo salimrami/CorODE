@@ -106,19 +106,17 @@ if __name__ == '__main__':
 
     # ------ load models ------
     
-    
-# Specify the path to the segmentation model file
     segnet_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
+
+# Load the segmentation data from the file
     segnet_data = nib.load(segnet_file).get_fdata()
 
 # Convert the segmentation data to a PyTorch tensor
-    segnet = torch.from_numpy(segnet_data).to(device)
-
-# Convert the segmentation data to a PyTorch tensor
-    #segnet = torch.from_numpy(segnet_data).to(device)
+    segnet = torch.from_numpy(segnet_data)
 
 # Move the segmentation model to the desired device
-    #segnet = segnet.to(device)
+    device = torch.device("cuda" )
+    segnet = segnet.to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
