@@ -107,6 +107,7 @@ if __name__ == '__main__':
     # ------ load models ------
     
     seg_file = "/scratch/saiterrami/seg/seg_img.nii.gz"
+    print(seg_file)
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
