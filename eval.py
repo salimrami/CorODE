@@ -195,10 +195,14 @@ if __name__ == '__main__':
         with torch.no_grad():
             volume_in = volume_in.unsqueeze(0)  # Add a batch dimension
             seg_pred = segnet[0]  # Assuming the segmentation data is stored in the first channel
+            print("seg_pred shape:", seg_pred.shape)
+            print("seg_pred unique values:", torch.unique(seg_pred))
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
-                #seg = seg[2:-2, :, :]  # Remove padding
+                seg = seg[2:-2, :, :]  # Remove padding
+                print("seg shape:", seg.shape)
+                print("seg unique values:", np.unique(seg))
                     
                 #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
         
