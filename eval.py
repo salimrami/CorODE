@@ -201,7 +201,7 @@ if __name__ == '__main__':
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             print("seg_pred shape:", seg_pred.shape)
             print("seg_pred unique values:", torch.unique(seg_pred))
-            counter = 1  # Initialize the counter
+            #counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred).cpu().numpy()  # lh
                 #seg = seg[2:-2, :, :]  # Remove padding
