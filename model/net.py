@@ -72,10 +72,13 @@ class CortexODE(nn.Module):
         
         
        # Check the shape of V[0, 0]
+        
+ 
         if len(V[0, 0].shape) != 3:
             raise ValueError("Invalid shape of V[0, 0]. Expected a shape of (D1, D2, D3).")
 
         D1, D2, D3 = V[0, 0].shape 
+        print(V[0, 0].shape)
         
         
 
