@@ -50,40 +50,26 @@ class CortexODE(nn.Module):
         self.initialized = True
 
     def set_data(self, x, V):
-        # x: coordinates
-        # V: input brain MRI volume
-        
-        
-        
-
+    # x: coordinates
+    # V: input brain MRI volume
     
-        
-    
-    
-    
-    
-        
         if not self.initialized:
             self.x_shift = torch.Tensor(np.linspace(-self.K // 2, self.K // 2, self.K)).to(V.device)
             grid_3d = torch.stack(torch.meshgrid(self.x_shift, self.x_shift, self.x_shift), dim=0).permute(2, 1, 3, 0)
             self.x_shift = grid_3d.reshape(-1, 3)
             self.cubes = torch.zeros([1, self.Q, self.K, self.K, self.K]).to(V.device)
             self._initialize(V)
-        
-        
-       # Check the shape of V[0, 0]
-        
- 
-        if len(V[0, 0].shape) != 3:
-            raise ValueError("Invalid shape of V[0, 0]. Expected a shape of (D1, D2, D3).")
 
-        D1, D2, D3 = V[0, 0].shape 
-        print(V[0, 0].shape)
+    # Verify the shape of V
+        if len(V.shape) != 3:
+            raise ValueError("Invalid shape of V. Expected a 3-dimensional volume.")
+
+        D1, D2, D3 = V.shape
         
         
 
         # set the shape of the volume
-        #D1, D2, D3 = V[0, 0].shape
+        D1, D2, D3 = V[0, 0].shape
         D = max([D1, D2, D3])
         # rescale for grid sampling
         self.rescale = torch.Tensor([D3 / D, D2 / D, D1 / D]).to(V.device)
