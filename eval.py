@@ -113,6 +113,7 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
+    print("taille de la seg",seg_data.shape)
     
     preprocessor = SegmentationPreprocessor(data_name='fetal')
 
@@ -264,11 +265,10 @@ if __name__ == '__main__':
                 f_in = torch.LongTensor(f_in).unsqueeze(0).to(device)
                 
                 # wm surface
-                cortexode_wm.set_data(v_in, volume_in.unsqueeze(0))  # Add unsqueeze(0) to add a batch dimension
+                cortexode_wm.set_data(v_in, volume_in)
                 v_wm_pred = odeint(cortexode_wm, v_in, t=T, method=solver,
-                   options=dict(step_size=step_size))[-1]
+                                   options=dict(step_size=step_size))[-1]
                 v_gm_in = v_wm_pred.clone()
-
 
                 # inflate and smooth
                 for i in range(2):
