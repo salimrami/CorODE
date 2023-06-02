@@ -13,7 +13,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchdiffeq import odeint_adjoint as odeint
 
-from data.preprocess import process_volume, process_surface, process_surface_inverse, preprocess_segmentation
+from data.preprocess import process_volume, process_surface, process_surface_inverse, SegmentationPreprocessor
 from util.mesh import laplacian_smooth, compute_normal, compute_mesh_distance, check_self_intersect
 from util.tca import topology
 from model.net import CortexODE
@@ -113,9 +113,11 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
+    
+    preprocessor = SegmentationPreprocessor(data_name='fetal')
 
 # Convert the segmentation data to a PyTorch tensor
-    segnet = torch.from_numpy(preprocess_segmentation(seg_data)).to(device)
+    segnet = torch.from_numpy(preprocessor.process_segmentation(seg_data)).to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"

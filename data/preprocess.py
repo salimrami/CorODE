@@ -46,47 +46,41 @@ def process_surface_inverse(v, f, data_name='fetal'):
 
 
  
+ 
 
-def preprocess_segmentation(seg, data_name='fetal', inverse=False):
-    if data_name == 'fetal':
-        if not inverse:
+class SegmentationPreprocessor:
+    def __init__(self, data_name='fetal'):
+        self.data_name = data_name
+
+    def process_segmentation(self, seg):
+        if self.data_name == 'fetal':
             seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
-            seg = seg[None].copy()
+            return seg[None].copy()
         else:
-            seg = seg[0, 2:-2, :, :].copy()
-        return seg
-    else:
-        raise ValueError("data_name should be in ['fetal']")
+            raise ValueError("data_name should be in ['fetal']")
+
+    def seg_surface(self, v, f):
+        if self.data_name == 'fetal':
+            v = v * 104 + [104, 104, 78]
+            v = v[:, [2, 1, 0]].copy()
+            f = f[:, [2, 1, 0]].copy()
+        else:
+            raise ValueError("data_name should be in ['fetal']")
+
+        return v, f
+
+    def inverse_preprocess_segmentation(self, v, f):
+        if self.data_name == 'fetal':
+            v = v * 104 + [104, 104, 78]
+            v = v[:, [2, 1, 0]].copy()
+            f = f[:, [2, 1, 0]].copy()
+        else:
+            raise ValueError("data_name should be in ['fetal']")
+
+        return v, f
+
 
 """
-def process_segmentation(seg, data_name='fetal'):
-    if data_name == 'fetal':
-        seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
-        return seg[None].copy()
-    else:
-        raise ValueError("data_name should be in ['fetal']")
-        
-        
-        
-def seg_surface(v, f, data_name='fetal'):
-    # Effectuer le prétraitement nécessaire sur les vertices et faces de la segmentation
-    # en fonction de data_name
 
-    if data_name == 'fetal':
-        v = v * 104 + [104, 104, 78]
-        v = v[:,[2,1,0]].copy()
-        f = f[:,[2,1,0]].copy()
-    else:
-        raise ValueError("data_name should be in ['fetal']")
-
-    return v, f
-
-def inverse_preprocess_segmentation(v, f, data_name='fetal'):
-    if data_name == 'fetal':
-        v = v * 104 + [104, 104, 78]
-        v = v[:,[2,1,0]].copy()
-        f = f[:,[2,1,0]].copy()
-    else:
-        raise ValueError("data_name should be in ['fetal']")
 
 """
