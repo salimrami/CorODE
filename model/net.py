@@ -54,7 +54,7 @@ class CortexODE(nn.Module):
         # V: input brain MRI volume
         if not self.initialized:
             self.x_shift = torch.Tensor(np.linspace(-self.K // 2, self.K // 2, self.K)).to(V.device)
-            grid_3d = torch.stack(torch.meshgrid(self.x_shift, self.x_shift, self.x_shift), dim=0).transpose(2, 1, 3, 0)
+            grid_3d = torch.stack(torch.meshgrid(self.x_shift, self.x_shift, self.x_shift), dim=0).permute(2, 1, 3, 0)
             self.x_shift = grid_3d.view(-1, 3)
             self.cubes = torch.zeros([1, self.Q, self.K, self.K, self.K]).to(V.device)
             self._initialize(V)
