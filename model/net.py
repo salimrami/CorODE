@@ -93,6 +93,8 @@ class CortexODE(nn.Module):
 
         # set multi-scale volume
         self.Vq = [V]
+        print("self.Vq[-1] shape:", self.Vq[-1].shape)
+        print("self.Vq[-1] unique values:", torch.unique(self.Vq[-1]))
         for q in range(1, self.Q):
             # iteratively downsampling
             self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
