@@ -59,25 +59,25 @@ class SegmentationPreprocessor:
         else:
             raise ValueError("data_name should be in ['fetal']")
 
-    def seg_surface(self, v, f):
+    def seg_surface(self, seg):
         if self.data_name == 'fetal':
-            v = v * 104 + [104, 104, 78]
-            v = v[:, [2, 1, 0]].copy()
-            f = f[:, [2, 1, 0]].copy()
+            seg = seg * 104 + [104, 104, 78]
+            seg= seg[:, [2, 1, 0]].copy()
+            #f = f[:, [2, 1, 0]].copy()
         else:
             raise ValueError("data_name should be in ['fetal']")
 
-        return v, f
+        return seg
 
-    def inverse_preprocess_segmentation(self, v, f):
+    def inverse_preprocess_segmentation(self, v):
         if self.data_name == 'fetal':
-            v = v * 104 + [104, 104, 78]
-            v = v[:, [2, 1, 0]].copy()
-            f = f[:, [2, 1, 0]].copy()
+            seg = seg * 104 + [104, 104, 78]
+            seg = seg[:, [2, 1, 0]].copy()
+            #f = f[:, [2, 1, 0]].copy()
         else:
             raise ValueError("data_name should be in ['fetal']")
 
-        return v, f
+        return seg 
 
 
 """
