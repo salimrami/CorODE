@@ -96,6 +96,9 @@ class CortexODE(nn.Module):
         for q in range(1, self.Q):
             # iteratively downsampling
             self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
+            print("self.Vq[-1] shape:", self.Vq[-1].shape)
+            print("self.Vq[-1] unique values:", torch.unique(self.Vq[-1]))
+
 
     def forward(self, t, x):
 
