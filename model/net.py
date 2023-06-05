@@ -120,17 +120,14 @@ class CortexODE(nn.Module):
         return dx
 
     def cube_sampling(self, x):
-        # x: coordinates
         with torch.no_grad():
             for q in range(self.Q):
-                # make sure the cubes have the same size
                 xq = x.unsqueeze(-2) + self.x_shift / self.D * 2 * (2 ** q)
-                xq = xq.contiguous().view(1, -1, 3).unsqueeze(-2).unsqueeze(-2)
+                xq = xq.contiguous().view(1, -1, 3)  # Remove the unnecessary dimensions
                 xq = xq / self.rescale  # rescale the coordinates
-                # sample the q-th cube
-                vq = F.grid_sample(self.Vq[q], xq, mode='bilinear', padding_mode='border', align_corners=True)
-                # update the cubes
+                vq = F.grid_sample(self.Vq[q].unsqueeze(0), xq.unsqueeze(-2).unsqueeze(-2), mode='bilinear', padding_mode='border', align_corners=True)
                 self.neighbors[:, q] = vq[0, 0].view(self.m, self.K, self.K, self.K)
 
         return self.neighbors.clone()
+
 
