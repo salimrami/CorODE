@@ -65,6 +65,8 @@ class CortexODE(nn.Module):
             raise ValueError("Invalid shape of V. Expected a 3-dimensional volume.")
 
         D1, D2, D3 = V.shape
+        print(V[0, 0].shape)
+
         
         
 
