@@ -16,6 +16,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import matplotlib.pyplot as plt
+import nibabel as nib
+
 class CortexODE(nn.Module):
     """
     The deformation network of CortexODE model.
@@ -50,15 +57,15 @@ class CortexODE(nn.Module):
         self.initialized = True
 
     def set_data(self, x, V):
-    # x: coordinates
-    # V: input brain MRI volume
+        # x: coordinates
+        # V: input brain MRI volume
         if V.dim() == 4:
             D1, D2, D3 = V.shape[1:]  # Extract dimensions from the tensor shape
         elif V.dim() == 3:
             D1, D2, D3 = V.shape
         else:
             raise ValueError("Invalid input tensor dimensions")
-    
+
         if not self.initialized:
             self.x_shift = torch.Tensor(np.linspace(-self.K // 2, self.K // 2, self.K)).to(V.device)
             grid_3d = torch.stack(torch.meshgrid(self.x_shift, self.x_shift, self.x_shift), dim=0).permute(2, 1, 3, 0)
@@ -66,17 +73,13 @@ class CortexODE(nn.Module):
             self.cubes = torch.zeros([1, self.Q, self.K, self.K, self.K]).to(V.device)
             self._initialize(V)
 
-    # Verify the shape of V
+        # Verify the shape of V
         if len(V.shape) != 3:
             raise ValueError("Invalid shape of V. Expected a 3-dimensional volume.")
 
         D1, D2, D3 = V.shape
         print("V shape:", V.shape)
         print("V[0, 0] shape:", V[0, 0].shape)
-        
-
-        
-        
 
         # set the shape of the volume
         D1, D2, D3 = V.shape[0], V.shape[1], V.shape[2]
@@ -92,12 +95,7 @@ class CortexODE(nn.Module):
         self.Vq = [V]
         for q in range(1, self.Q):
             # iteratively downsampling
-            
-            if len(self.Vq[-1]) > 0:
-                self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
-            
-            
-            #self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
+            self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
 
     def forward(self, t, x):
 
