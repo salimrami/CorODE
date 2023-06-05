@@ -52,6 +52,12 @@ class CortexODE(nn.Module):
     def set_data(self, x, V):
     # x: coordinates
     # V: input brain MRI volume
+        if V.dim() == 4:
+            D1, D2, D3 = V.shape[1:]  # Extract dimensions from the tensor shape
+        elif V.dim() == 3:
+            D1, D2, D3 = V.shape
+        else:
+            raise ValueError("Invalid input tensor dimensions")
     
         if not self.initialized:
             self.x_shift = torch.Tensor(np.linspace(-self.K // 2, self.K // 2, self.K)).to(V.device)
@@ -73,7 +79,7 @@ class CortexODE(nn.Module):
         
 
         # set the shape of the volume
-        D1, D2, D3 = V[0, 0].unsqueeze(0).unsqueeze(0)
+        D1, D2, D3 = V[0, 0].shape
         D = max([D1, D2, D3])
         # rescale for grid sampling
         self.rescale = torch.Tensor([D3 / D, D2 / D, D1 / D]).to(V.device)
