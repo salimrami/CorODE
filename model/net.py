@@ -82,7 +82,6 @@ class CortexODE(nn.Module):
         print("V[0, 0] shape:", V[0, 0].shape)
 
         # set the shape of the volume
-        D1, D2, D3 = V.shape[0], V.shape[1], V.shape[2]
         D = max([D1, D2, D3])
         # rescale for grid sampling
         self.rescale = torch.Tensor([D3 / D, D2 / D, D1 / D]).to(V.device)
@@ -92,7 +91,7 @@ class CortexODE(nn.Module):
         self.neighbors = self.cubes.repeat(self.m, 1, 1, 1, 1)  # repeat m cubes
 
         # set multi-scale volume
-        self.Vq = [V]
+        self.Vq = [V.unsqueeze(0)]  # Add unsqueeze to match the shape
         print("self.Vq[-1] shape:", self.Vq[-1].shape)
         print("self.Vq[-1] unique values:", torch.unique(self.Vq[-1]))
         for q in range(1, self.Q):
@@ -100,7 +99,6 @@ class CortexODE(nn.Module):
             self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
             print("self.Vq[-1] shape:", self.Vq[-1].shape)
             print("self.Vq[-1] unique values:", torch.unique(self.Vq[-1]))
-
 
     def forward(self, t, x):
 
@@ -135,3 +133,4 @@ class CortexODE(nn.Module):
                 self.neighbors[:, q] = vq[0, 0].view(self.m, self.K, self.K, self.K)
 
         return self.neighbors.clone()
+
