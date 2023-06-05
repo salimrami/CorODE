@@ -192,6 +192,7 @@ if __name__ == '__main__':
             
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).to(device)
+        volume_in = torch.squeeze(volume_in, dim=0)
             
 
         # ------- predict segmentation ------- 
@@ -264,7 +265,7 @@ if __name__ == '__main__':
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
             with torch.no_grad():
-                v_in = torch.Tensor(v_in).unsqueeze(0).to(device)
+                v_in = torch.Tensor(v_in).unsqueeze(0).unsqueeze(0).to(device)
                 print("v_in",v_in.shape)
                 f_in = torch.LongTensor(f_in).unsqueeze(0).to(device)
                 
