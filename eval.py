@@ -208,7 +208,7 @@ if __name__ == '__main__':
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred).cpu().numpy()  # lh
-                #seg = seg[2:-2, :, :]  # Remove padding
+                seg = seg[2:-2, :, :]  # Remove padding
                 print("seg shape:", seg.shape)
                 print("seg unique values:", np.unique(seg))
                     
