@@ -115,7 +115,7 @@ if __name__ == '__main__':
     seg_data = nib.load(seg_file).get_fdata()
     seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
     print("taille de la seg",seg_data.shape)
-    seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
+    #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
      
     
     preprocessor = SegmentationPreprocessor(data_name='fetal')
