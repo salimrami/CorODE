@@ -92,7 +92,12 @@ class CortexODE(nn.Module):
         self.Vq = [V]
         for q in range(1, self.Q):
             # iteratively downsampling
-            self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
+            
+            if len(self.Vq[-1]) > 0:
+                self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
+            
+            
+            #self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
 
     def forward(self, t, x):
 
