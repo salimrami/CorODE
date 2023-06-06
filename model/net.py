@@ -62,9 +62,11 @@ class CortexODE(nn.Module):
         if not self.initialized:
             self._initialize(V)
         
+    # print the shape of V
+        print("V shape:", V.shape)
+    
     # set the shape of the volume
         D1, D2, D3 = V[0, 0].shape
-        print("V[0, 0] shape:", V[0, 0].shape)
 
         D = max([D1, D2, D3])
     # rescale for grid sampling
