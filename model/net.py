@@ -60,15 +60,14 @@ class CortexODE(nn.Module):
     # x: coordinates
     # V: input brain MRI volume
         if not self.initialized:
-            self._initialize(V)
+               self._initialize(V)
         
-    #if not self.initialized:
-         
-        
-    # set the shape of the volume
+        # set the shape of the volume
         if len(V[0, 0].shape) == 1:
+            
             D = max(V[0, 0].shape)
             D1, D2, D3 = D, D, D
+            V = V.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
         else:
             D1, D2, D3 = V[0, 0].shape
     
@@ -76,6 +75,9 @@ class CortexODE(nn.Module):
         print("V shape:", V.shape)
         print("V[0, 0] shape:", V[0, 0].shape)
         print("D1, D2, D3:", D1, D2, D3)
+
+    # Rest of the code...
+
 
 
         D = max([D1, D2, D3])
