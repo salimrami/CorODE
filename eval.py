@@ -115,7 +115,7 @@ if __name__ == '__main__':
     seg_data = nib.load(seg_file).get_fdata()
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
     print("taille de la seg",seg_data.shape)
-    seg_data/500
+    
     #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
      
     
@@ -208,10 +208,11 @@ if __name__ == '__main__':
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             print("seg_pred shape:", seg_pred.shape)
             print("seg_pred unique values:", torch.unique(seg_pred))
+            
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred==1).cpu().numpy()  # lh
-                seg = seg[2:-2, :, :]  # Remove padding
+                #seg = seg[2:-2, :, :]  # Remove padding
                 print("seg shape:", seg.shape)
                 
                     
