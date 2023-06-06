@@ -167,7 +167,7 @@ if __name__ == '__main__':
             brain_arr = (brain_arr / 700).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).to(device)
-        volume_in = torch.squeeze(volume_in, dim=0)
+        #volume_in = torch.squeeze(volume_in, dim=0)
             
             #brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             
