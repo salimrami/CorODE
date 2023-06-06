@@ -57,28 +57,29 @@ class CortexODE(nn.Module):
         self.initialized == True
         
     def set_data(self, x, V):
-        # x: coordinats
-        # V: input brain MRI volume
+    # x: coordinates
+    # V: input brain MRI volume
         if not self.initialized:
             self._initialize(V)
-            
-        # set the shape of the volume
-        D1,D2,D3 = V[0,0].shape
-        print("V(0,0)",V[0, 0].shape)
+        
+    # set the shape of the volume
+        D1, D2, D3 = V[0, 0].shape
+        print("V[0, 0] shape:", V[0, 0].shape)
 
-        D = max([D1,D2,D3])
-        # rescale for grid sampling
+        D = max([D1, D2, D3])
+    # rescale for grid sampling
         self.rescale = torch.Tensor([D3/D, D2/D, D1/D]).to(V.device)
         self.D = D
 
         self.m = x.shape[1]    # number of points
-        self.neighbors = self.cubes.repeat(self.m,1,1,1,1)    # repeat m cubes
-        
+        self.neighbors = self.cubes.repeat(self.m, 1, 1, 1, 1)    # repeat m cubes
+    
         # set multi-scale volume
         self.Vq = [V]
         for q in range(1, self.Q):
-            # iteratively downsampling
+        # iteratively downsampling
             self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
+
 
     def forward(self, t, x):
         
