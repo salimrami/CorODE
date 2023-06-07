@@ -54,10 +54,14 @@ class SegmentationPreprocessor:
 
     def process_segmentation(self, seg):
         if self.data_name == 'fetal':
-            seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
+            #seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
             return seg.copy()
         else:
             raise ValueError("data_name should be in ['fetal']")
+
+
+
+"""
 
     def seg_surface(self, seg):
         if self.data_name == 'fetal':
@@ -78,9 +82,5 @@ class SegmentationPreprocessor:
             raise ValueError("data_name should be in ['fetal']")
 
         return seg 
-
-
-"""
-
 
 """
