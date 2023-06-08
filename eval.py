@@ -130,8 +130,7 @@ if __name__ == '__main__':
     seg_data = np.transpose(seg_data, (2, 0, 1)) # Ajuste les dimensions
 
     seg_data = torch.from_numpy(seg_data).to(device)  # Déplace seg_data vers le GPU si nécessaire
-# seg_data = seg_data.permute(2, 0, 1)  # Ajuste les dimensions
-# seg_data = process_volume(seg_data, data_name)
+#
     
 
     seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
