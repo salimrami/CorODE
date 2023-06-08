@@ -113,8 +113,8 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    #seg_data = seg_data/700
-    #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
+    seg_data = process_volume(seg_data, data_name)
+    
     print("taille de la seg",seg_data.shape)
     
     #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
