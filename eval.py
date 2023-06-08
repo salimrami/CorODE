@@ -125,16 +125,16 @@ if __name__ == '__main__':
     """
     seg_data = nib.load(seg_file).get_fdata()
     seg_data = np.transpose(seg_data, (1, 2, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
-    seg_data= process_volume(seg_data, data_name='fetal')  # Prétraitement de seg_pred
-    seg_data = seg_data.squeeze(0)
-    #seg_pred = seg_pred  # Supprime la dimension du batch
-    #seg_data = np.transpose(seg_data, (2, 0, 1)) # Ajuste les dimensions
+    seg_data = process_volume(seg_data, data_name='fetal')  # Prétraitement de seg_pred
+    seg_data = np.transpose(seg_data, (2, 0, 1)) # Ajuste les dimensions
 
-    seg_data = torch.from_numpy(seg_data).to(device)  # Déplace seg_data vers le GPU si nécessaire
+    seg_data = seg_data.to(device)  # Déplace seg_data vers le GPU si nécessaire
+
+    #seg_data = torch.from_numpy(seg_data).to(device)  # Déplace seg_data vers le GPU si nécessaire
 
     
 
-    seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
+    #seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
     # seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
 # seg_data = process_volume(seg_data, data_name)
 
