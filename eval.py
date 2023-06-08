@@ -117,7 +117,7 @@ if __name__ == '__main__':
     seg_data =process_volume(seg_data)
     seg_data = process_volume(seg_data, data_name='fetal')
     seg_data = torch.from_numpy(seg_data).to(device)  # Move seg_data to GPU (if necessary)
-    seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
+    #seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
     
     #seg_data = seg_data/700
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
