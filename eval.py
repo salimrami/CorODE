@@ -115,9 +115,9 @@ if __name__ == '__main__':
     seg_data = nib.load(seg_file).get_fdata()
     
     seg_data =process_volume(seg_data)
-    seg_data = seg_data.permute(1, 2, 0)  # Adjust the dimensions for the process_volume function
-    #seg_pred = process_volume(seg_pred, data_name='fetal')  # Preprocess seg_pred
-    seg_data = seg_data.squeeze(0).permute(2, 0, 1)  # Adjust the dimensions back
+    seg_data = process_volume(seg_data, data_name='fetal')
+    seg_data = torch.from_numpy(seg_data).to(device)  # Move seg_data to GPU (if necessary)
+    seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
     
     #seg_data = seg_data/700
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
