@@ -120,10 +120,10 @@ if __name__ == '__main__':
     #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
      
     
-    preprocessor = SegmentationPreprocessor(data_name='fetal')
+    #preprocessor = SegmentationPreprocessor(data_name='fetal')
 
 # Convert the segmentation data to a PyTorch tensor
-    segnet = torch.from_numpy(preprocessor.process_segmentation(seg_data)).to(device)
+    segnet = torch.from_numpy((seg_data)).to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
