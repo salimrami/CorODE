@@ -214,8 +214,8 @@ if __name__ == '__main__':
             volume_in = volume_in.unsqueeze(0) # Add a batch dimension
             print("volume_in",volume_in.shape)
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
-            seg_pred = np.pad(seg_pred, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
-            seg_pred = seg_pred[None].copy()
+            segnet = np.pad(segnet, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
+            #segnet = segnet[None].copy()
             print("seg_pred shape:", seg_pred.shape)
             print("seg_pred unique values:", torch.unique(seg_pred))
             
