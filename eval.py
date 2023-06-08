@@ -211,7 +211,7 @@ if __name__ == '__main__':
             
 
         with torch.no_grad():
-            volume_in = volume_in.unsqueeze(0) # Add a batch dimension
+            volume_in = volume_in # Add a batch dimension
             print("volume_in",volume_in.shape)
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             print("seg_pred shape:", seg_pred.shape)
