@@ -123,11 +123,19 @@ if __name__ == '__main__':
     
     print("taille de la seg",seg_data.shape)
     """
+    # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
     seg_data = torch.from_numpy(seg_data)  # Convert to a PyTorch tensor
     seg_pred = seg_data.permute(1, 2, 0)  # Adjust the dimensions for the process_volume function
     seg_pred = process_volume(seg_pred, data_name='fetal')  # Preprocess seg_pred
-    seg_pred = seg_pred.permute(1, 2, 0)  # Adjust the dimensions back
+    seg_pred = seg_pred.squeeze(0)  # Remove the batch dimension
+    seg_pred = seg_pred.permute(2, 0, 1)  # Adjust the dimensions back
+
+    seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
+    # seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
+# seg_data = process_volume(seg_data, data_name)
+
+    print("taille de la seg", seg_data.shape)
 
     seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
 #seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
