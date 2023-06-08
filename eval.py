@@ -113,13 +113,6 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
-    
-    #seg_data =process_volume(seg_data)
-    #seg_data = process_volume(seg_data, data_name='fetal')
-    seg_data = torch.from_numpy(seg_data).to(device)  # Move seg_data to GPU (if necessary)
-    #seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
-    
     #seg_data = seg_data/700
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
     print("taille de la seg",seg_data.shape)
@@ -221,7 +214,6 @@ if __name__ == '__main__':
             volume_in = volume_in.unsqueeze(0) # Add a batch dimension
             print("volume_in",volume_in.shape)
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
-            
             print("seg_pred shape:", seg_pred.shape)
             print("seg_pred unique values:", torch.unique(seg_pred))
             
