@@ -164,7 +164,7 @@ if __name__ == '__main__':
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 700).astype(np.float16)
+            brain_arr = (brain_arr / 4554.).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).to(device)
         volume_in = torch.squeeze(volume_in, dim=0)
@@ -271,6 +271,11 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            # Chemin de destination pour sauvegarder le maillage initial
+            #save_path = '/scratch/saiterrami/results/init_surface.obj'
+            # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
+            #mesh_init.export(save_path)
+            
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
