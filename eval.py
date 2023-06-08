@@ -110,40 +110,12 @@ if __name__ == '__main__':
     
     seg_file = "/scratch/saiterrami/seg/lh.nii.gz"
     print(seg_file)
-    """
+
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    seg_pred = seg_data.permute(1, 2, 0)  # Adjust the dimensions for the process_volume function
-    seg_pred = process_volume(seg_pred, data_name='fetal')  # Preprocess seg_pred
-    seg_pred = seg_pred.squeeze(0).permute(2, 0, 1)
-    
-    seg_data = torch.from_numpy(seg_data).to(device)  # Move seg_data to GPU (if necessary)
-    #seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
-    #seg_data = process_volume(seg_data, data_name)
+    seg_data = process_volume(seg_data, data_name)
     
     print("taille de la seg",seg_data.shape)
-    """
-    seg_data = nib.load(seg_file).get_fdata()
-    seg_data = np.transpose(seg_data, (1, 2, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
-    seg_data = process_volume(seg_data, data_name='fetal')  # Prétraitement de seg_pred
-    seg_pred = seg_data.squeeze(0)
-    seg_data = np.transpose(seg_data, (2, 0, 1)) # Ajuste les dimensions
-
-    seg_data = seg_data.to(device)  # Déplace seg_data vers le GPU si nécessaire
-
-    #seg_data = torch.from_numpy(seg_data).to(device)  # Déplace seg_data vers le GPU si nécessaire
-
-    
-
-    #seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
-    # seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
-# seg_data = process_volume(seg_data, data_name)
-
-    print("taille de la seg", seg_data.shape)
-
-    seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
-#seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
-#seg_data = process_volume(seg_data, data_name)
     
     #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
      
@@ -151,8 +123,7 @@ if __name__ == '__main__':
     #preprocessor = SegmentationPreprocessor(data_name='fetal')
 
 # Convert the segmentation data to a PyTorch tensor
-    #segnet = torch.from_numpy((seg_data)).to(device)
-    segnet = torch.from_numpy(seg_data).to(device)
+    segnet = torch.from_numpy((seg_data)).to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
