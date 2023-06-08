@@ -127,7 +127,7 @@ if __name__ == '__main__':
     seg_data = torch.from_numpy(seg_data)  # Convert to a PyTorch tensor
     seg_pred = seg_data.permute(1, 2, 0)  # Adjust the dimensions for the process_volume function
     seg_pred = process_volume(seg_pred, data_name='fetal')  # Preprocess seg_pred
-    seg_pred = seg_pred.squeeze(0).permute(1, 2, 0)  # Adjust the dimensions back
+    seg_pred = seg_pred.permute(1, 2, 0)  # Adjust the dimensions back
 
     seg_data = seg_data.to(device)  # Move seg_data to GPU (if necessary)
 #seg_data = seg_data.permute(2, 0, 1)  # Adjust the dimensions
