@@ -224,6 +224,8 @@ if __name__ == '__main__':
             seg_pred = torch.squeeze(seg_pred, dim=0)
             print("seg_pred shape:", seg_pred.shape)
             print("seg_pred unique values:", torch.unique(seg_pred))
+            print("volume_in shape:", volume_in.shape)
+            print("volume_in unique values:", torch.unique(volume_in))
             
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
