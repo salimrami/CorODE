@@ -214,10 +214,10 @@ if __name__ == '__main__':
             volume_in = volume_in # Add a batch dimension
             volume_in = torch.squeeze(volume_in, dim=0)
             print("volume_in",volume_in.shape)
-            seg_pred = np.transpose(seg_data, (1, 2, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
+            seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
-            seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
+            #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
 
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             seg_pred = torch.squeeze(seg_pred, dim=0)
