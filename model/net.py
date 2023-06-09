@@ -190,6 +190,9 @@ class CortexODE(nn.Module):
             
         # set the shape of the volume
         D1,D2,D3 = V[0,0].shape
+        #D1, D2, D3 = V[0, 0].shape
+        D1, D2, D3 = V.shape[2:]  # Obtenir les dimensions à partir de V directement
+
         D = max([D1,D2,D3])
         # rescale for grid sampling
         self.rescale = torch.Tensor([D3/D, D2/D, D1/D]).to(V.device)
