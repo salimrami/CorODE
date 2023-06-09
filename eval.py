@@ -282,8 +282,9 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            file_name = 'init_' + data_name + '_' + surf_hemi + '_' + subid + '.obj'
             # Chemin de destination pour sauvegarder le maillage initial
-            save_path = '/scratch/saiterrami/results/'
+            save_path = file_name + init_dir
             # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
             mesh_init.export(save_path)
             
