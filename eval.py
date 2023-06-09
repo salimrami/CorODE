@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    seg_data = process_volume(seg_data, data_name)
+    #seg_data = process_volume(seg_data, data_name)
     
     print("taille de la seg",seg_data.shape)
     
