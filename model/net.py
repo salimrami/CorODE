@@ -44,7 +44,7 @@ class CortexODE(nn.Module):
         self.localfc = nn.Linear(C, C)
         
         # for cube sampling
-        self.initialized = True
+        self.initialized = False
         grid = np.linspace(-K//2, K//2, K)
         grid_3d = np.stack(np.meshgrid(grid, grid, grid), axis=0).transpose(2,1,3,0)
         self.x_shift = torch.Tensor(grid_3d.copy()).view(-1,3)
