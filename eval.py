@@ -287,7 +287,7 @@ if __name__ == '__main__':
             save_dir = '/scratch/saiterrami/init/'
 
             os.makedirs(save_dir, exist_ok=True)
-            save_path = os.path.join(save_dir, 'init_surface.obj')
+            save_path = os.path.join(save_dir )
             mesh_init.export(save_path)
             
             
