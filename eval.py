@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     # ------ load models ------
     
-    seg_file = "/scratch/saiterrami/seg/lh.nii.gz"
+    seg_file = "/scratch/saiterrami/seg/lh-seg.nii.gz"
     print(seg_file)
 
 # Load the segmentation data
@@ -287,7 +287,6 @@ if __name__ == '__main__':
             # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
             #mesh_init.export(save_path)
             save_path = '/scratch/saiterrami/softs/init_surface.obj'
-
             # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
             mesh_init.export(save_path)
 
