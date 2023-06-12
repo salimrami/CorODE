@@ -282,23 +282,7 @@ if __name__ == '__main__':
         # ------- save initial surface ------- 
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
-            
-            mesh_init = trimesh.Trimesh(v_in, f_in)
-            save_dir = '/scratch/saiterrami/init/'
-
-            os.makedirs(save_dir, exist_ok=True)
-            save_path = os.path.join(save_dir )
-            mesh_init.export(save_path)
-            
-            
-            #mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            # Chemin de destination pour sauvegarder le maillage initial
-            #save_path = '/scratch/saiterrami/results/init_surface.obj'
-            # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
-            #mesh_init.export(save_path)
-            #save_path = '/scratch/saiterrami/results/init_surface.obj'
-            # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
-            #mesh_init.export(save_path)
+            mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
@@ -335,10 +319,10 @@ if __name__ == '__main__':
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
             ### save mesh to .obj or .stl format by Trimesh
-            #mesh_wm = trimesh.Trimesh(v_wm_pred, f_wm_pred)
-            #mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
-            #mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.stl')
-            #mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_wm = trimesh.Trimesh(v_wm_pred, f_wm_pred)
+            mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
+            mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.stl')
+            mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
             # save the surfaces in FreeSurfer format
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
