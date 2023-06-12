@@ -323,6 +323,7 @@ if __name__ == '__main__':
             mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
             mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.stl')
             mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
             # save the surfaces in FreeSurfer format
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
