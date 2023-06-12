@@ -59,7 +59,7 @@ def load_seg_data(config, data_usage='train'):
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 4554.).astype(np.float32)
+            brain_arr = (brain_arr / 2583.).astype(np.float32)
             brain_arr = process_volume(brain_arr, data_name)
             
             # wm_label is the generated segmentation by projecting surface into the volume
