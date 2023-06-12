@@ -287,7 +287,7 @@ if __name__ == '__main__':
             #save_path = '/scratch/saiterrami/results/init_surface.obj'
             # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
             #mesh_init.export(save_path)
-            save_path = '/scratch/saiterrami/softs/init_surface.obj'
+            save_path = '/scratch/saiterrami/results/init_surface.obj'
             # Sauvegarder le maillage initial en tant qu'objet Wavefront (.obj)
             mesh_init.export(save_path)
 
