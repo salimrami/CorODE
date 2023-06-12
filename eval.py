@@ -284,7 +284,8 @@ if __name__ == '__main__':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             
             mesh_init = trimesh.Trimesh(v_in, f_in)
-            save_dir = '/scratch/saiterrami/results/'
+            save_dir = '/scratch/saiterrami/init/'
+
             os.makedirs(save_dir, exist_ok=True)
             save_path = os.path.join(save_dir, 'init_surface.obj')
             mesh_init.export(save_path)
