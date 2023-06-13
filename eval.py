@@ -219,7 +219,7 @@ if __name__ == '__main__':
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
             seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
-            #seg_pred = seg_pred[2:-2, :, :]  # Remove padding
+            seg_pred = seg_pred[2:-2, :, :]  # Remove padding
 
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             seg_pred = torch.squeeze(seg_pred, dim=0)
