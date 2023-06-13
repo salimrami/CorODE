@@ -283,8 +283,8 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            mesh_in = trimesh.Trimesh(v_in, f_in)
-            mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            #mesh_in = trimesh.Trimesh(v_in, f_in)
+            #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
