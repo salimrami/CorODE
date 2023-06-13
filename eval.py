@@ -282,9 +282,9 @@ if __name__ == '__main__':
         # ------- save initial surface ------- 
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
-            #mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            mesh_init = trimesh.Trimesh(v_in, f_in)
-            mesh_init.export(result_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_in = trimesh.Trimesh(v_in, f_in)
+            mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
@@ -300,6 +300,7 @@ if __name__ == '__main__':
                 v_gm_in = v_wm_pred.clone()
 
                 # inflate and smooth
+                
                 for i in range(2):
                     v_gm_in = laplacian_smooth(v_gm_in, f_in, lambd=1.0)
                     n_in = compute_normal(v_gm_in, f_in)
