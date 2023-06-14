@@ -26,7 +26,8 @@ def process_surface(v, f, data_name='fetal'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
-        v = (v - [104, 104, 78]) / 104
+        v = (v - [112, 125, 101] / 112)
+        
     else:
         raise ValueError("data_name should be in ['fetal']")
 
@@ -34,7 +35,7 @@ def process_surface(v, f, data_name='fetal'):
 
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
-        v = v * 104 + [104, 104, 78]
+        v = v * 112 + [112, 125, 101]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
     else:
@@ -48,16 +49,6 @@ def process_surface_inverse(v, f, data_name='fetal'):
  
  
 
-class SegmentationPreprocessor:
-    def __init__(self, data_name='fetal'):
-        self.data_name = data_name
-
-    def process_segmentation(self, seg):
-        if self.data_name == 'fetal':
-            #seg = np.pad(seg, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
-            return seg.copy()
-        else:
-            raise ValueError("data_name should be in ['fetal']")
 
 
 

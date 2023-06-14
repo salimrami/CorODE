@@ -215,11 +215,12 @@ if __name__ == '__main__':
             volume_in = volume_in # Add a batch dimension
             volume_in = torch.squeeze(volume_in, dim=0)
             print("volume_in",volume_in.shape)
-            seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
+            seg_pred = seg_data
+            #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
-            seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
-            seg_pred = seg_pred[2:-2, :, :]  # Remove padding
+            #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
+            #seg_pred = seg_pred[2:-2, :, :]  # Remove padding
 
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             seg_pred = torch.squeeze(seg_pred, dim=0)
@@ -283,6 +284,8 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
