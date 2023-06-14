@@ -26,7 +26,7 @@ def process_surface(v, f, data_name='fetal'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
-        v = (v - [112, 125, 101] / 112)
+        v = (v - [112, 125, 101] )/ 112
         
     else:
         raise ValueError("data_name should be in ['fetal']")
