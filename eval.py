@@ -124,7 +124,7 @@ if __name__ == '__main__':
     #preprocessor = SegmentationPreprocessor(data_name='fetal')
 
 # Convert the segmentation data to a PyTorch tensor
-    segnet = torch.from_numpy((seg_data)).to(device)
+    #segnet = torch.from_numpy((seg_data)).to(device)
     
     
     #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
@@ -221,7 +221,7 @@ if __name__ == '__main__':
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
             #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
             #seg_pred = seg_pred[2:-2, :, :]  # Remove padding
-
+            segnet = torch.from_numpy((seg_pred)).to(device)
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             seg_pred = torch.squeeze(seg_pred, dim=0)
             print("seg_pred shape:", seg_pred.shape)
