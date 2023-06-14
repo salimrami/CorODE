@@ -168,7 +168,10 @@ if __name__ == '__main__':
             brain_arr = (brain_arr / 841.25).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
-        volume_in = torch.squeeze(volume_in, dim=0)
+        #volume_in = torch.squeeze(volume_in, dim=0)
+        #volume_in = volume_in # Add a batch dimension
+        #volume_in = torch.squeeze(volume_in, dim=0)
+        #print("volume_in",volume_in.shape)
             
             #brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             
@@ -212,9 +215,7 @@ if __name__ == '__main__':
             
 
         with torch.no_grad():
-            volume_in = volume_in # Add a batch dimension
-            volume_in = torch.squeeze(volume_in, dim=0)
-            print("volume_in",volume_in.shape)
+            
             seg_pred = seg_data
             #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
