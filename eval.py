@@ -13,7 +13,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchdiffeq import odeint_adjoint as odeint
 
-from data.preprocess import process_volume, process_surface, process_surface_inverse, SegmentationPreprocessor
+from data.preprocess import process_volume, process_surface, process_surface_inverse
 from util.mesh import laplacian_smooth, compute_normal, compute_mesh_distance, check_self_intersect
 from util.tca import topology
 from model.net import CortexODE
@@ -284,7 +284,7 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            #v_in, f_in = process_surface(v_in, f_in, data_name)
+            v_in, f_in = process_surface(v_in, f_in, data_name)
             v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
