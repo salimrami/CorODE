@@ -284,7 +284,7 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+            v_in, f_in = process_surface(v_in, f_in, data_name)
             v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
