@@ -31,7 +31,7 @@ def process_surface(v, f, data_name='fetal'):
         
         
             # Normalize to [-1, 1]
-        v = (v - [112, 125, 101] / 112)
+        v = (v - [112, 125, 101] )/ 112
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
 
     
