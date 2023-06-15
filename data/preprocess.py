@@ -26,12 +26,11 @@ def process_surface(v, f, data_name='fetal'):
     if data_name == 'fetal':
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
-        if np.max(v) <= 1 and np.min(v) >= -1:
-            print("Data is already normalized. Min value:", np.min(v), "Max value:", np.max(v))
-        else:
+        
+        
             # Normalize to [-1, 1]
-            v = (v - [104, 104, 78]) / 104
-            print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
+        v = (v - [104, 104, 78]) / 104
+        print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
 
     
         
