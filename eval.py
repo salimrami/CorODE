@@ -283,7 +283,7 @@ if __name__ == '__main__':
                               alpha=16, level=0.8, n_smooth=2)
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
-        v_in, f_in = process_surface(v_in, f_in, data_name)
+        #v_in, f_in = process_surface(v_in, f_in, data_name)
         v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
 
