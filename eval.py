@@ -282,7 +282,7 @@ if __name__ == '__main__':
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
                               alpha=16, level=0.8, n_smooth=2)
         mesh_init = trimesh.Trimesh(v_in, f_in)
-        mesh_init.export('/scratch/saiterrami/resultats.obj')
+        mesh_init.export('/scratch/saiterrami/init/init.obj')
         v_in, f_in = process_surface(v_in, f_in, data_name)
         v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
 
