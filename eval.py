@@ -58,11 +58,18 @@ def seg2surf(seg,
 
     # ------ marching cubes ------
     v_mc, f_mc, _, _ = marching_cubes(-sdf_topo, level=-level, method='lorensen')
-    v_mc = v_mc[:,[2,1,0]].copy()
+    #v_mc = v_mc[:,[2,1,0]].copy()
+    v_mc = v_mc[:,[0,1,2]].copy()
+
     f_mc = f_mc.copy()
     D1,D2,D3 = sdf_topo.shape
     D = max(D1,D2,D3)
-    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+
+    #inverser ca !
+    #sauvegarder freesurfer
+    
     
     # ------ bias correction ------
     # Note that this bias is introduced by FreeSurfer.
@@ -284,8 +291,10 @@ if __name__ == '__main__':
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
         #v_in, f_in = process_surface(v_in, f_in, data_name)
-        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+        #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
+        nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
+                                         v_in, f_in)
 
         # ------- save initial surface ------- 
         if test_type == 'init':
