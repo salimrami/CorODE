@@ -55,6 +55,7 @@ class CortexODE(nn.Module):
         self.x_shift = self.x_shift.to(V.device)
         self.cubes = self.cubes.to(V.device)
         self.initialized == True
+       
         
     def set_data(self, x, V):
     # x: coordinates
