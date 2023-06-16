@@ -43,9 +43,10 @@ def process_surface(v, f, data_name='fetal'):
 
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
-        v = v * 112 + [112, 125.5, 101]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
+        # normalize to [-1, 1]
+        v = (v - [104, 104, 78]) / 104
     else:
         raise ValueError("data_name should be in ['fetal']")
 
