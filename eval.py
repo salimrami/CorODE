@@ -291,7 +291,7 @@ if __name__ == '__main__':
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
         #v_in, f_in = process_surface(v_in, f_in, data_name)
-        #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
                                          v_in, f_in)
