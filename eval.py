@@ -128,7 +128,7 @@ if __name__ == '__main__':
     #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
      
     
-    #preprocessor = SegmentationPreprocessor(data_name='fetal')
+   
 
 # Convert the segmentation data to a PyTorch tensor
     #segnet = torch.from_numpy((seg_data)).to(device)
@@ -173,7 +173,7 @@ if __name__ == '__main__':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 4554).astype(np.float16)
-            #brain_arr = brain_arr[2:-2, :, :]  # Remove padding
+            brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
         #volume_in = torch.squeeze(volume_in, dim=0)
@@ -301,8 +301,8 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            v_in, f_in = process_surface(v_in, f_in, data_name)
-            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+            #v_in, f_in = process_surface(v_in, f_in, data_name)
+            #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
