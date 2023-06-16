@@ -290,9 +290,9 @@ if __name__ == '__main__':
                               alpha=16, level=0.8, n_smooth=2)
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
-        #v_in, f_in = process_surface(v_in, f_in, data_name)
-        #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
-        #mesh_init = trimesh.Trimesh(v_in, f_in)
+        v_in, f_in = process_surface(v_in, f_in, data_name)
+        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+        mesh_init = trimesh.Trimesh(v_in, f_in)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
                                          v_in, f_in)
@@ -301,7 +301,7 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            #v_in, f_in = process_surface(v_in, f_in, data_name)
+            v_in, f_in = process_surface(v_in, f_in, data_name)
             v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
