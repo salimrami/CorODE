@@ -299,7 +299,7 @@ if __name__ == '__main__':
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
                               alpha=16, level=0.8, n_smooth=2)
-        v_in = v_in[:,[0,1,2]]
+        v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
         #v_in, f_in = process_surface(v_in, f_in, data_name)
