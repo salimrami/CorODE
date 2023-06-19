@@ -318,9 +318,10 @@ if __name__ == '__main__':
         # ------- save initial surface ------- 
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
+            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
             #v_in, f_in = process_surface(v_in, f_in, data_name)
-            #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+            
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
@@ -336,7 +337,7 @@ if __name__ == '__main__':
                 v_wm_pred = odeint(cortexode_wm, v_in, t=T, method=solver,
                                    options=dict(step_size=step_size))[-1]
                 v_gm_in = v_wm_pred.clone()
-                #v_gm_in = v_gm_in[:,[2,1,0]]
+                
 
                 # inflate and smooth
                 
