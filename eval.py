@@ -353,7 +353,7 @@ if __name__ == '__main__':
                 cortexode_gm.set_data(v_gm_in, volume_in)
                 v_gm_pred = odeint(cortexode_gm, v_gm_in, t=T, method=solver,
                                    options=dict(step_size=step_size/2))[-1]  # divided by 2 to reduce SIFs
-                v_gm_pred = v_gm_pred[:,[2,1,0]]
+                #v_gm_pred = v_gm_pred[:,[2,1,0]]
 
             v_wm_pred = v_wm_pred[0].cpu().numpy()
             f_wm_pred = f_in[0].cpu().numpy()
@@ -362,7 +362,11 @@ if __name__ == '__main__':
             # map the surface coordinate from [-1,1] to its original space
             
             v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            #ces lignes en dessous je l'ai ajouté pour corriger le probleme d'axes
+            v_wm_pred = v_wm_pred[:,[2,1,0]]
+            v_gm_pred = v_gm_pred[:,[2,1,0]]
+
 
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
