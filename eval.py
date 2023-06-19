@@ -309,7 +309,7 @@ if __name__ == '__main__':
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
         #v_in, f_in = process_surface(v_in, f_in, data_name)
-        #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         #mesh_init = trimesh.Trimesh(v_in, f_in)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
@@ -356,8 +356,10 @@ if __name__ == '__main__':
             v_gm_pred = v_gm_pred[0].cpu().numpy()
             f_gm_pred = f_in[0].cpu().numpy()
             # map the surface coordinate from [-1,1] to its original space
-            v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            v_wm_pred, f_wm_pred = (v_wm_pred, f_wm_pred, data_name)
+            v_gm_pred, f_gm_pred = (v_gm_pred, f_gm_pred, data_name)
+            #v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
+            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
 
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
