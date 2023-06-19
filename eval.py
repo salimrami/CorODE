@@ -353,6 +353,7 @@ if __name__ == '__main__':
                 cortexode_gm.set_data(v_gm_in, volume_in)
                 v_gm_pred = odeint(cortexode_gm, v_gm_in, t=T, method=solver,
                                    options=dict(step_size=step_size/2))[-1]  # divided by 2 to reduce SIFs
+                v_gm_pred = v_gm_pred[:,[2,1,0]]
 
             v_wm_pred = v_wm_pred[0].cpu().numpy()
             f_wm_pred = f_in[0].cpu().numpy()
