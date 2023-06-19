@@ -137,6 +137,8 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
+    seg_data = seg_data[:, :, ::-1]
+
     
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
     #seg_data = process_volume(seg_data, data_name)
@@ -243,7 +245,7 @@ if __name__ == '__main__':
         with torch.no_grad():
             
             seg_pred = seg_data
-            seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
+            #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
             #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
