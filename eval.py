@@ -317,7 +317,10 @@ if __name__ == '__main__':
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
                                          v_in, f_in)
-        nib.gifti.write(result_dir + data_name + 'init' + '_init.gii', v_in, f_in)
+        gii = nib.gifti.GiftiImage()
+        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
+        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
+        nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
 
         # ------- save initial surface ------- 
         if test_type == 'init':
