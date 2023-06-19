@@ -317,6 +317,7 @@ if __name__ == '__main__':
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
                                          v_in, f_in)
+        nib.gifti.write(result_dir + data_name + 'init' + '_init.gii', v_in, f_in)
 
         # ------- save initial surface ------- 
         if test_type == 'init':
