@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    seg_data = seg_data[:, :, ::-1]
+    #seg_data = seg_data[:, :, ::-1]
 
     
     #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
@@ -308,7 +308,7 @@ if __name__ == '__main__':
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
                               alpha=16, level=0.8, n_smooth=2)
-        # 39el a salim had l="iba !!! v_in = v_in[:,[2,1,0]]
+        v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
         #v_in, f_in = process_surface(v_in, f_in, data_name)
