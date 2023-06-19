@@ -3,6 +3,12 @@ Created on Fri Jun 16 14:25:30 2023
 
 @author: salimrami
 """
+#save write mesh gifti
+#pred surface not aligned
+# warning axes surface surface inverse 
+#le 5 /07 plan 15min de presentation 
+#10 repetition 14h
+# 10 slice almost
 
 import os
 import nibabel as nib
@@ -330,6 +336,7 @@ if __name__ == '__main__':
                 v_wm_pred = odeint(cortexode_wm, v_in, t=T, method=solver,
                                    options=dict(step_size=step_size))[-1]
                 v_gm_in = v_wm_pred.clone()
+                v_gm_in = v_gm_in[:,[2,1,0]]
 
                 # inflate and smooth
                 
