@@ -80,8 +80,9 @@ def seg2surf(seg,
     f_mc = f_mc.copy()
     D1,D2,D3 = sdf_topo.shape
     D = max(D1,D2,D3)
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    #jai decommenté ca pour la normalisation des surface pial et white
+    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
 
     #inverser ca !
     #sauvegarder freesurfer
