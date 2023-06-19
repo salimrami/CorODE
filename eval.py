@@ -362,7 +362,7 @@ if __name__ == '__main__':
             # map the surface coordinate from [-1,1] to its original space
             
             v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
 
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
