@@ -81,8 +81,8 @@ def seg2surf(seg,
     D1,D2,D3 = sdf_topo.shape
     D = max(D1,D2,D3)
     #jai decommenté ca pour la normalisation des surface pial et white
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
 
     #inverser ca !
     #sauvegarder freesurfer
@@ -312,9 +312,9 @@ if __name__ == '__main__':
         v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
-        #v_in, f_in = process_surface(v_in, f_in, data_name)
-        #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
-        #mesh_init = trimesh.Trimesh(v_in, f_in)
+        v_in, f_in = process_surface(v_in, f_in, data_name)
+        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+        mesh_init = trimesh.Trimesh(v_in, f_in)
         mesh_init.export('/scratch/saiterrami/init/init.obj')
         nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
                                          v_in, f_in)
