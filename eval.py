@@ -84,6 +84,7 @@ def seg2surf(seg,
     #jai decommenté ca pour la normalisation des surface pial et white
     v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
     v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    print("v_mc apres normalisation",v_mc)
 
     #inverser ca !
     #sauvegarder freesurfer
