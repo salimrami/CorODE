@@ -372,8 +372,8 @@ if __name__ == '__main__':
             v_wm_pred = v_wm_pred[:,[0,1,2]]
             
             v_gm_pred = v_gm_pred[:,[0,1,2]]
-            #v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
+            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
            
 
 
