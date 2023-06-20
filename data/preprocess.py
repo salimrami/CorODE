@@ -21,6 +21,9 @@ def process_volume(x, data_name='fetal'):
         return x[None].copy()
     else:
         raise ValueError("data_name should be in ['fetal']")
+        
+        
+        
 
 def process_surface(v, f, data_name='fetal'):
     f = f.astype(np.float32)
@@ -28,11 +31,8 @@ def process_surface(v, f, data_name='fetal'):
     if data_name == 'fetal':
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
-        
-        
-            # Normalize to [-1, 1]
+        # normalize to [-1, 1]
         v = (v - [104, 104, 78]) / 104
-        #v = np.clip(v, -1, 1) 
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
 
     
@@ -42,12 +42,13 @@ def process_surface(v, f, data_name='fetal'):
 
     return v, f
 
+
+
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
         v = v * 104 + [104, 104, 78]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
-        # normalize to [-1, 1]
         
     else:
         raise ValueError("data_name should be in ['fetal']")
