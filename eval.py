@@ -82,8 +82,8 @@ def seg2surf(seg,
     print(D1,D2,D3)
     D = max(D1,D2,D3)
     #jai decommenté ca pour la normalisation des surface pial et white
-    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
     print("v_mc apres normalisation",v_mc)
 
     #inverser ca !
@@ -369,8 +369,8 @@ if __name__ == '__main__':
             # map the surface coordinate from [-1,1] to its original space
             
             #ces lignes en dessous je l'ai ajouté pour corriger le probleme d'axes
-            #v_wm_pred = v_wm_pred[:,[2,1,0]]
-            #v_gm_pred = v_gm_pred[:,[2,1,0]]
+            v_wm_pred = v_wm_pred[:,[2,1,0]]
+            v_gm_pred = v_gm_pred[:,[2,1,0]]
             v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
             v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
            
