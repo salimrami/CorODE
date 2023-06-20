@@ -44,7 +44,7 @@ def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
              alpha=16,
-             level=0.3,
+             level=1.5,
              n_smooth=0):
     """
     Extract the surface based on the segmentation.
