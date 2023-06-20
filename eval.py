@@ -195,7 +195,7 @@ if __name__ == '__main__':
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 1007).astype(np.float16)
+            brain_arr = (brain_arr / 1016).astype(np.float16)
             brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
@@ -372,8 +372,8 @@ if __name__ == '__main__':
             v_wm_pred = v_wm_pred[:,[0,1,2]]
             
             v_gm_pred = v_gm_pred[:,[0,1,2]]
-            v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
+            #v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
+            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
            
 
 
