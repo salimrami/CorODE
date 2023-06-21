@@ -79,12 +79,12 @@ def seg2surf(seg,
 
     f_mc = f_mc.copy()
     D1,D2,D3 = sdf_topo.shape
-    print(D1,D2,D3)
+    #print(D1,D2,D3)
     D = max(D1,D2,D3)
     #jai decommenté ca pour la normalisation des surface pial et white
     #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
     #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
-    print("v_mc apres normalisation",v_mc)
+    #print("v_mc apres normalisation",v_mc)
 
     #inverser ca !
     #sauvegarder freesurfer
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     # ------ load models ------
     
     seg_file = "/scratch/saiterrami/seg/segmentation_lh.nii.gz"
-    print(seg_file)
+    #print(seg_file)
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
@@ -310,7 +310,7 @@ if __name__ == '__main__':
 
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
-                              alpha=16, level=0.8, n_smooth=2)
+                              alpha=16, level=0.5, n_smooth=0)
         v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
