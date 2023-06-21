@@ -19,7 +19,7 @@ class CortexODE(nn.Module):
     
     def __init__(self, dim_in=3,
                        dim_h=128,
-                       kernel_size=5,
+                       kernel_size=3,
                        n_scale=2):
         
         super(CortexODE, self).__init__()
