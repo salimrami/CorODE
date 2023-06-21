@@ -33,6 +33,8 @@ def process_surface(v, f, data_name='fetal'):
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
         v = (v - [104, 104, 78]) / 104
+        print("Size of v:", v.shape)
+        print("Size of f:", f.shape)
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
 
     
