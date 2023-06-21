@@ -10,8 +10,10 @@ Note: it is tedious to tune the transformation of the surface to match the volum
 for a new dataset, but the matching is important to make everything work.
 """
 #from eval import seg2surf
-
- 
+#160, 208, 208
+#153x180x150
+#208,208,164
+#150,180,153
 import numpy as np
 
 def process_volume(x, data_name='fetal'):
@@ -32,7 +34,7 @@ def process_surface(v, f, data_name='fetal'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
-        v = (v - [104, 104, 78]) / 104
+        v = (v - [75, 90, 74]) / 90
         print("Size of v:", v.shape)
         print("Size of f:", f.shape)
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
