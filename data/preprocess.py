@@ -34,7 +34,7 @@ def process_surface(v, f, data_name='fetal'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
-        v = (v - [75, 90, 74]) / 90
+        v = (v - [75, 90, 74.5]) / 90
         print("Size of v:", v.shape)
         print("Size of f:", f.shape)
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
@@ -50,7 +50,7 @@ def process_surface(v, f, data_name='fetal'):
 
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
-        v = v * 104 + [104, 104, 78]
+        v = v * 90 + [75, 90, 74.5]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         
