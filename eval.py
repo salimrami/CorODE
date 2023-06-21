@@ -43,9 +43,9 @@ topo_correct = topology()
 def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
-             alpha=16,
-             level=5,
-             n_smooth=0):
+             alpha=20,
+             level=0.8,
+             n_smooth=2):
     """
     Extract the surface based on the segmentation.
     
