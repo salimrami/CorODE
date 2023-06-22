@@ -43,7 +43,7 @@ topo_correct = topology()
 def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
-             alpha=20,
+             alpha=16,
              level=0.8,
              n_smooth=2):
     """
