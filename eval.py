@@ -154,8 +154,8 @@ if __name__ == '__main__':
             print("le min : ",min_value)
             max_value = np.max(brain_arr)
             print("le max : ",max_value)
-            median =np.mean(brain_arr)
-            print("le median : ",median)
+            #median =np.mean(brain_arr)
+            #print("le median : ",median)
 
 # Define the desired range for voxel intensities
             #desired_min = 0  # Update with your desired minimum intensity value
