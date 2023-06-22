@@ -1,15 +1,3 @@
-"""
-Created on Fri Jun 16 14:25:30 2023
-
-@author: salimrami
-"""
-#save write mesh gifti
-#pred surface not aligned
-# warning axes surface surface inverse 
-#le 5 /07 plan 15min de presentation 
-#10 repetition 14h
-# 10 slice almost
-
 import os
 import nibabel as nib
 import trimesh
@@ -28,14 +16,9 @@ from torchdiffeq import odeint_adjoint as odeint
 from data.preprocess import process_volume, process_surface, process_surface_inverse
 from util.mesh import laplacian_smooth, compute_normal, compute_mesh_distance, check_self_intersect
 from util.tca import topology
-from model.net import CortexODE
+from model.net import CortexODE, Unet
 from config import load_config
 import time
-from nibabel import gifti
-
-
-
-
 
 # initialize topology correction
 topo_correct = topology()
@@ -58,9 +41,7 @@ def seg2surf(seg,
     """
     
     # ------ connected components checking ------ 
-    #cc, nc = compute_cc(seg, connectivity=2, return_num=True)
     cc, nc = compute_cc(seg, connectivity=2, return_num=True)
-
     cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i)\
                                     for i in range(1, nc+1)]))
     seg = (cc==cc_id).astype(np.float64)
@@ -76,20 +57,10 @@ def seg2surf(seg,
     # ------ marching cubes ------
     v_mc, f_mc, _, _ = marching_cubes(-sdf_topo, level=-level, method='lorensen')
     v_mc = v_mc[:,[2,1,0]].copy()
-    #v_mc = v_mc[:,[0,1,2]].copy()
-
     f_mc = f_mc.copy()
     D1,D2,D3 = sdf_topo.shape
-    #print(D1,D2,D3)
     D = max(D1,D2,D3)
-    #jai decommenté ca pour la normalisation des surface pial et white
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
-    #print("v_mc apres normalisation",v_mc)
-
-    #inverser ca !
-    #sauvegarder freesurfer
-    
+    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
     
     # ------ bias correction ------
     # Note that this bias is introduced by FreeSurfer.
@@ -97,7 +68,7 @@ def seg2surf(seg,
     # but the affine matrix of the MRI was not changed.
     # So this bias is caused by the different between 
     # the original and new affine matrix.
-    
+ 
         
     # ------ mesh smoothing ------
     v_mc = torch.Tensor(v_mc).unsqueeze(0).to(device)
@@ -105,7 +76,6 @@ def seg2surf(seg,
     for j in range(n_smooth):    # smooth and inflate the mesh
         v_mc = laplacian_smooth(v_mc, f_mc, 'uniform', lambd=1)
     v_mc = v_mc[0].cpu().numpy()
-    #v_mc = v_mc[:,[0,1,2]].copy()
     f_mc = f_mc[0].cpu().numpy()
     
     return v_mc, f_mc
@@ -135,33 +105,8 @@ if __name__ == '__main__':
     rho = config.rho # inflation scale
 
     # ------ load models ------
-    
-    seg_file = "/scratch/saiterrami/seg/segmentation_lh.nii.gz"
-    #print(seg_file)
-
-# Load the segmentation data
-    seg_data = nib.load(seg_file).get_fdata()
-    #seg_data = seg_data[:, :, ::-1]
-
-    
-    #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
-    #seg_data = process_volume(seg_data, data_name)
-    
-    print("taille de la seg",seg_data.shape)
-    
-    #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
-     
-    
-   
-
-# Convert the segmentation data to a PyTorch tensor
-    #segnet = torch.from_numpy((seg_data)).to(device)
-    
-    
-    #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
-    #print(segnet)
-    #segnet = Unet(c_in=1, c_out=3).to(device)
-    #segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
+    segnet = Unet(c_in=1, c_out=3).to(device)
+    segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
     if test_type == 'pred' or test_type == 'eval':
         T = torch.Tensor([0,1]).to(device)
@@ -189,106 +134,45 @@ if __name__ == '__main__':
 
         # ------- load brain MRI ------- 
         
-            
-            
-            
-            
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr /  2583).astype(np.float16)
-            brain_arr = brain_arr[2:-2, :, :]  # Remove padding
+            brain_arr = (brain_arr / 20).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
-        #volume_in = torch.squeeze(volume_in, dim=0)
-        #volume_in = volume_in # Add a batch dimension
-        #volume_in = torch.squeeze(volume_in, dim=0)
-        #print("volume_in",volume_in.shape)
-            
-            #brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
-            
-            #brain_arr = brain.get_fdata()
-            #brain_arr = (brain_arr / 1500.).astype(np.float16)
-       #brain_arr = process_volume(brain_arr, data_name)
-        #volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
-        #calculer min et max adni 
-            
-            
-            
-            
-            #min_value = np.min(brain_arr)
-            #print("le min : ",min_value)
-            #max_value = np.max(brain_arr)
-            #print("le max : ",max_value)
-            #median =np.mean(brain_arr)
-            #print("le median : ",median)
-
-# Define the desired range for voxel intensities
-            #desired_min = 0  # Update with your desired minimum intensity value
-            #desired_max = 255  # Update with your desired maximum intensity value
-
-# Calculate the scaling factor
-            #scaling_factor = (desired_max - desired_min) / (max_value - min_value)
-            
-            
-            
-            #brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min)
-            #brain_arr = (brain_arr / 20).astype(np.float16)
-            
-        #brain_arr = process_volume(brain_arr, data_name)
-        #volume_in = torch.Tensor(brain_arr).to(device)
-        #volume_in = torch.squeeze(volume_in, dim=0)
-            
 
         # ------- predict segmentation ------- 
             
 
 
-            
+        
 
         with torch.no_grad():
-            
-            seg_pred = seg_data
-            #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
-            seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
-            seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
-            #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
-            #seg_pred = seg_pred[2:-2, :, :]  # Remove padding
-            segnet = torch.from_numpy((seg_pred)).to(device)
-            seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
-            seg_pred = torch.squeeze(seg_pred, dim=0)
-            print("seg_pred shape:", seg_pred.shape)
-            #print("seg_pred unique values:", torch.unique(seg_pred))
-            #print("volume_in shape:", volume_in.shape)
-            #print("volume_in unique values:", torch.unique(volume_in))
-            
+            seg_out = segnet(volume_in)
+            seg_pred = torch.argmax(seg_out, dim=1)[0]
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
-                seg = (seg_pred==1).cpu().numpy()  # lh
-                
-                
-                print("seg shape:", seg.shape)
-                
-                    
-                #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
+                seg = (seg_pred == 1).cpu().numpy()  # lh
+                seg = seg[2:-2, :, :]  # Remove padding
+                seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
         
         # Generate the file name with counter
-               # file_name = f'lh_segmentation{counter}.nii.gz'
+                file_name = f'lh_segmentation{counter}.nii.gz'
         
-                #nib.save(seg_img, file_name)  # Save predicted segmentation
+                nib.save(seg_img, file_name)  # Save predicted segmentation
         
-                #counter += 1  # Increment the counter for the next segmentation
+                counter += 1  # Increment the counter for the next segmentation
                
                 
             
                 
-           # elif surf_hemi == 'rh':
-            #    seg = (seg_pred==2).cpu().numpy()  # rh
-             #   seg = seg[2:-2, :, :]  # Remove padding
-              #  seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
-               # print(seg_img.shape)
+            elif surf_hemi == 'rh':
+                seg = (seg_pred==2).cpu().numpy()  # rh
+                seg = seg[2:-2, :, :]  # Remove padding
+                seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
+                print(seg_img.shape)
 
-                #nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
+                nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
 
       
 
@@ -311,36 +195,17 @@ if __name__ == '__main__':
 
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
-                              alpha=16, level=0.5, n_smooth=0)
-        v_in = v_in[:,[2,1,0]]
-        mesh_init = trimesh.Trimesh(v_in, f_in)
-        
-        v_in, f_in = process_surface(v_in, f_in, data_name)
-        v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
-        mesh_init = trimesh.Trimesh(v_in, f_in)
-        mesh_init.export('/scratch/saiterrami/init/init.obj')
-        nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
-                                         v_in, f_in)
-        gii = nib.gifti.GiftiImage()
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
-        nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
+                              alpha=16, level=0.8, n_smooth=2)
 
         # ------- save initial surface ------- 
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
-            #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            #v_in, f_in = process_surface(v_in, f_in, data_name)
-            
-            #mesh_in = trimesh.Trimesh(v_in, f_in)
-            #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
             with torch.no_grad():
                 v_in = torch.Tensor(v_in).unsqueeze(0).to(device)
-                print("v_in",v_in.shape)
                 f_in = torch.LongTensor(f_in).unsqueeze(0).to(device)
                 
                 # wm surface
@@ -348,10 +213,8 @@ if __name__ == '__main__':
                 v_wm_pred = odeint(cortexode_wm, v_in, t=T, method=solver,
                                    options=dict(step_size=step_size))[-1]
                 v_gm_in = v_wm_pred.clone()
-                
 
                 # inflate and smooth
-                
                 for i in range(2):
                     v_gm_in = laplacian_smooth(v_gm_in, f_in, lambd=1.0)
                     n_in = compute_normal(v_gm_in, f_in)
@@ -361,22 +224,14 @@ if __name__ == '__main__':
                 cortexode_gm.set_data(v_gm_in, volume_in)
                 v_gm_pred = odeint(cortexode_gm, v_gm_in, t=T, method=solver,
                                    options=dict(step_size=step_size/2))[-1]  # divided by 2 to reduce SIFs
-                #v_gm_pred = v_gm_pred[:,[2,1,0]]
 
             v_wm_pred = v_wm_pred[0].cpu().numpy()
             f_wm_pred = f_in[0].cpu().numpy()
             v_gm_pred = v_gm_pred[0].cpu().numpy()
             f_gm_pred = f_in[0].cpu().numpy()
             # map the surface coordinate from [-1,1] to its original space
-            
-            #ces lignes en dessous je l'ai ajouté pour corriger le probleme d'axes
-            v_wm_pred = v_wm_pred[:,[0,1,2]]
-            
-            v_gm_pred = v_gm_pred[:,[0,1,2]]
-            #v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
-            #v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
-           
-
+            v_wm_pred, f_wm_pred = process_surface_inverse(v_wm_pred, f_wm_pred, data_name)
+            v_gm_pred, f_gm_pred = process_surface_inverse(v_gm_pred, f_gm_pred, data_name)
 
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
@@ -385,38 +240,19 @@ if __name__ == '__main__':
             #mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
             #mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.stl')
             #mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
-            #mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
             # save the surfaces in FreeSurfer format
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
                                              v_wm_pred, f_wm_pred)
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
                                              v_gm_pred, f_gm_pred)
-            white_gii = gifti.GiftiImage()
-            white_data = gifti.GiftiDataArray(v_wm_pred, intent='NIFTI_INTENT_POINTSET')
-            white_faces = gifti.GiftiDataArray(f_wm_pred, intent='NIFTI_INTENT_TRIANGLE')
-            white_gii.add_gifti_data_array(white_data)
-            white_gii.add_gifti_data_array(white_faces)
-
-            # Save the white geometry to a GIfTI file
-            white_file = result_dir + data_name + '_' + surf_hemi + '_' + subid + '.white.gii'
-            nib.save(white_gii, white_file)
-            # Create a GiftiImage object for the pial geometry
-            pial_gii = gifti.GiftiImage()
-            pial_data = gifti.GiftiDataArray(v_gm_pred, intent='NIFTI_INTENT_POINTSET')
-            pial_faces = gifti.GiftiDataArray(f_gm_pred, intent='NIFTI_INTENT_TRIANGLE')
-            pial_gii.add_gifti_data_array(pial_data)
-            pial_gii.add_gifti_data_array(pial_faces)
-
-    # Save the pial geometry to a GIfTI file
-            pial_file = result_dir + data_name + '_' + surf_hemi + '_' + subid + '.pial.gii'
-            nib.save(pial_gii, pial_file)
-
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
             
+            
             if data_name == 'fetal':
+                
                 if surf_hemi == 'lh':
                     surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
@@ -512,5 +348,4 @@ if __name__ == '__main__':
         print('sif std:', np.std(sif_gm_all))
        
 """   # ------- report the final results ------- 
- 
  
