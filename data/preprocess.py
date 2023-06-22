@@ -11,9 +11,17 @@ for a new dataset, but the matching is important to make everything work.
 """
 #from eval import seg2surf
 #160, 208, 208
-#153x180x150
 #208,208,164
+
+#153x180x150
+
 #150,180,153
+
+
+
+
+#(224, 251, 203)
+#203 251 224 
 import numpy as np
 
 def process_volume(x, data_name='fetal'):
@@ -33,8 +41,8 @@ def process_surface(v, f, data_name='fetal'):
     if data_name == 'fetal':
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
-        # normalize to [-1, 1]
-        v = (v - [75, 90, 74.5]) / 90
+        # normalize to [-1, 1] par division par 2
+        v = (v - [101.5, 125.5, 110]) / 125.5
         print("Size of v:", v.shape)
         print("Size of f:", f.shape)
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
@@ -50,7 +58,7 @@ def process_surface(v, f, data_name='fetal'):
 
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
-        v = v * 90 + [75, 90, 74.5]
+        v = v * 125.5 + [101.5, 125.5, 110]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         
