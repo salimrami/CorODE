@@ -4,18 +4,76 @@ import torch.nn.functional as F
 import numpy as np
 
 
+# segmentation U-Net
+class Unet(nn.Module):
+    def __init__(self, c_in=1, c_out=2):
+        super(Unet, self).__init__()
 
+        self.conv1 = nn.Conv3d(in_channels=c_in, out_channels=16, kernel_size=3,
+                               stride=1, padding=1)
+        self.conv2 = nn.Conv3d(in_channels=16, out_channels=32, kernel_size=3,
+                               stride=2, padding=1)
+        self.conv3 = nn.Conv3d(in_channels=32, out_channels=64, kernel_size=3,
+                               stride=2, padding=1)
+        self.conv4 = nn.Conv3d(in_channels=64, out_channels=128, kernel_size=3,
+                               stride=2, padding=1)
+        self.conv5 = nn.Conv3d(in_channels=128, out_channels=128, kernel_size=3,
+                               stride=2, padding=1)
+
+        self.deconv4 = nn.Conv3d(in_channels=256, out_channels=64, kernel_size=3,
+                               stride=1, padding=1)
+        self.deconv3 = nn.Conv3d(in_channels=128, out_channels=32, kernel_size=3,
+                               stride=1, padding=1)
+        self.deconv2 = nn.Conv3d(in_channels=64, out_channels=16, kernel_size=3,
+                               stride=1, padding=1)
+        self.deconv1 = nn.Conv3d(in_channels=32, out_channels=16, kernel_size=3,
+                               stride=1, padding=1)
+        
+        self.lastconv1 = nn.Conv3d(in_channels=16, out_channels=16, kernel_size=3,
+                                   stride=1, padding=1)
+        self.lastconv2 = nn.Conv3d(in_channels=16, out_channels=c_out, kernel_size=3,
+                                   stride=1, padding=1)
+        self.up = nn.Upsample(scale_factor=2, mode='trilinear')
+        
+    def forward(self, x):
+
+        x1 = F.leaky_relu(self.conv1(x), 0.2)
+        x2 = F.leaky_relu(self.conv2(x1), 0.2)
+        x3 = F.leaky_relu(self.conv3(x2), 0.2)
+        x4 = F.leaky_relu(self.conv4(x3), 0.2)
+        x  = F.leaky_relu(self.conv5(x4), 0.2)
+        x  = self.up(x)
+        
+        x = torch.cat([x, x4], dim=1)
+        x = F.leaky_relu(self.deconv4(x), 0.2)
+        x = self.up(x)
+        
+        x = torch.cat([x, x3], dim=1)
+        x = F.leaky_relu(self.deconv3(x), 0.2)
+        x = self.up(x)
+        
+        x = torch.cat([x, x2], dim=1)
+        x = F.leaky_relu(self.deconv2(x), 0.2)
+        x = self.up(x)
+        
+        x = torch.cat([x, x1], dim=1)
+        x = F.leaky_relu(self.deconv1(x), 0.2)
+
+        x = F.leaky_relu(self.lastconv1(x), 0.2)
+        x = self.lastconv2(x)
+
+        return x
 
 
 class CortexODE(nn.Module):
-    
-    #The deformation network of CortexODE model.
+    """
+    The deformation network of CortexODE model.
 
-    #dim_in: input dimension
-    #dim_h (C): hidden dimension
-    #kernel_size (K): size of convolutional kernels
-    #n_scale (Q): number of scales of the multi-scale input
-    
+    dim_in: input dimension
+    dim_h (C): hidden dimension
+    kernel_size (K): size of convolutional kernels
+    n_scale (Q): number of scales of the multi-scale input
+    """
     
     def __init__(self, dim_in=3,
                        dim_h=128,
@@ -55,46 +113,28 @@ class CortexODE(nn.Module):
         self.x_shift = self.x_shift.to(V.device)
         self.cubes = self.cubes.to(V.device)
         self.initialized == True
-       
         
     def set_data(self, x, V):
-    # x: coordinates
-    # V: input brain MRI volume
+        # x: coordinats
+        # V: input brain MRI volume
         if not self.initialized:
-               self._initialize(V)
-        
-        # set the shape of the volume
-        if len(V[0, 0].shape) == 1:
+            self._initialize(V)
             
-            D = max(V[0, 0].shape)
-            D1, D2, D3 = D, D, D
-            V = V.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
-        else:
-            D1, D2, D3 = V[0, 0].shape
-    
-    # Print the shape of V for debugging
-        print("V shape:", V.shape)
-        print("V[0, 0] shape:", V[0, 0].shape)
-        print("D1, D2, D3:", D1, D2, D3)
-
-
-
-
-
-        D = max([D1, D2, D3])
-    # rescale for grid sampling
+        # set the shape of the volume
+        D1,D2,D3 = V[0,0].shape
+        D = max([D1,D2,D3])
+        # rescale for grid sampling
         self.rescale = torch.Tensor([D3/D, D2/D, D1/D]).to(V.device)
         self.D = D
 
         self.m = x.shape[1]    # number of points
-        self.neighbors = self.cubes.repeat(self.m, 1, 1, 1, 1)    # repeat m cubes
-    
+        self.neighbors = self.cubes.repeat(self.m,1,1,1,1)    # repeat m cubes
+        
         # set multi-scale volume
         self.Vq = [V]
         for q in range(1, self.Q):
-        # iteratively downsampling
+            # iteratively downsampling
             self.Vq.append(F.avg_pool3d(self.Vq[-1], 2))
-
 
     def forward(self, t, x):
         
@@ -129,5 +169,3 @@ class CortexODE(nn.Module):
                 self.neighbors[:,q] = vq[0,0].view(self.m, self.K, self.K, self.K)
         
         return self.neighbors.clone()
-
-
