@@ -391,6 +391,11 @@ if __name__ == '__main__':
                                              v_wm_pred, f_wm_pred)
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
                                              v_gm_pred, f_gm_pred)
+            nib.freesurfer.io.write_geometry(result_dir + data_name + '_' + surf_hemi + '_' + subid + '.white.gii',
+                                 v_wm_pred, f_wm_pred)
+            nib.freesurfer.io.write_geometry(result_dir + data_name + '_' + surf_hemi + '_' + subid + '.pial.gii',
+                                 v_gm_pred, f_gm_pred)
+
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
