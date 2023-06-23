@@ -25,7 +25,7 @@ def process_volume(x, data_name='hcp'):
         x = x[::-1,:,:]
         x = x[:,:,::-1]
         return x[None, 40:-40, 24:-24, 40:-40].copy()
-    elif data_name == 'dhcp':
+    elif data_name == 'fetal':
         x = np.pad(x, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
         return x[None].copy()
     else:
@@ -52,7 +52,7 @@ def process_surface(v, f, data_name='hcp'):
         # normalize to [-1, 1]
         v = v + 128
         v = (v - [88, 104, 88]) / 104
-    elif data_name == 'dhcp':
+    elif data_name == 'fetal':
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
@@ -85,7 +85,7 @@ def process_surface_inverse(v, f, data_name='hcp'):
         v[:,1] = v[:,1] + 24
         v[:,2] = v[:,2] + 40
         
-    elif data_name == 'dhcp':
+    elif data_name == 'fetal':
         v = v * 103.5 + [103.5, 103.5, 75.5]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()        
