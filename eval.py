@@ -159,7 +159,7 @@ if __name__ == '__main__':
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
-                #seg = seg[2:-2, :, :]  # Remove padding
+                seg = seg[2:-2, :, :]  # Remove padding
                 seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
         
         # Generate the file name with counter
@@ -175,7 +175,7 @@ if __name__ == '__main__':
             elif surf_hemi == 'rh':
                 seg = (seg_pred==2).cpu().numpy()  # rh
                 seg = seg[2:-2, :, :]  # Remove padding
-                seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
+                seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
                 print(seg_img.shape)
 
                 nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
