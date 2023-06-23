@@ -56,7 +56,8 @@ def process_surface(v, f, data_name='hcp'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1]
-        v = (v - [104, 104, 78]) / 104
+        #155 207 207
+        v = (v - [103.5, 103.5, 75.5]) / 103.5
     else:
         raise ValueError("data_name should be in ['hcp','adni','dhcp']")
 
@@ -85,7 +86,7 @@ def process_surface_inverse(v, f, data_name='hcp'):
         v[:,2] = v[:,2] + 40
         
     elif data_name == 'dhcp':
-        v = v * 104 + [104, 104, 78]
+        v = v * 103.5 + [103.5, 103.5, 75.5]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()        
     else:
