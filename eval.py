@@ -144,7 +144,6 @@ if __name__ == '__main__':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 20).astype(np.float16)
-            brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
 
@@ -161,7 +160,8 @@ if __name__ == '__main__':
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
                 seg = seg[2:-2, :, :]  # Remove padding
-                seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
+                
+                seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
         
         # Generate the file name with counter
                 file_name = f'lh_segmentation{counter}.nii.gz'
@@ -176,7 +176,7 @@ if __name__ == '__main__':
             elif surf_hemi == 'rh':
                 seg = (seg_pred==2).cpu().numpy()  # rh
                 seg = seg[2:-2, :, :]  # Remove padding
-                seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
+                seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
                 print(seg_img.shape)
 
                 nib.save(seg_img, 'rh_segmentation.nii.gz') #save predicted segmentation
