@@ -159,7 +159,7 @@ if __name__ == '__main__':
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
                 seg = (seg_pred == 1).cpu().numpy()  # lh
-                seg = seg[2:-2, :, :]  # Remove padding
+                #seg = seg[2:-2, :, :]  # Remove padding
                 seg_img = nib.Nifti1Image(seg.astype(np.uint8), np.eye(4))
         
         # Generate the file name with counter
