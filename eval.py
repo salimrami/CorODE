@@ -136,7 +136,7 @@ if __name__ == '__main__':
 
     # ------ load models ------
     
-    seg_file = "/scratch/saiterrami/seg/segmentation_lh.nii.gz"
+    seg_file = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
     #print(seg_file)
 
 # Load the segmentation data
