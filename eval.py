@@ -187,7 +187,7 @@ if __name__ == '__main__':
     for i in tqdm(range(len(subject_list))):
         subid = subject_list[i]
 
-        # ------- load brain MRI ------- 
+        ## ------- load brain MRI ------- 
         
             
             
