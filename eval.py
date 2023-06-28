@@ -83,8 +83,8 @@ def seg2surf(seg,
     #print(D1,D2,D3)
     D = max(D1,D2,D3)
     #jai decommenté ca pour la normalisation des surface pial et white
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
     #print("v_mc apres normalisation",v_mc)
 
     #inverser ca !
@@ -196,7 +196,7 @@ if __name__ == '__main__':
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr /  2583).astype(np.float16)
+            brain_arr = (brain_arr /  20).astype(np.float16)
             brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
