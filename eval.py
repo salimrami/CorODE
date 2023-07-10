@@ -45,8 +45,8 @@ def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
              alpha=16,
-             level=0.5,
-             n_smooth=0):
+             level=0.8,
+             n_smooth=2):
     """
     Extract the surface based on the segmentation.
     
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     for i in tqdm(range(len(subject_list))):
         subid = subject_list[i]
 
-        # ------- load brain MRI ------- 
+        ## ------- load brain MRI ------- 
         
             
             
