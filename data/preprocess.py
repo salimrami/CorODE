@@ -23,8 +23,7 @@ for a new dataset, but the matching is important to make everything work.
 #(224, 251, 203)
 
 #203 251 224 
-110 125 101
-101 125 110
+
 
 import numpy as np
 
