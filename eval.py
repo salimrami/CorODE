@@ -137,31 +137,20 @@ if __name__ == '__main__':
     # ------ load models ------
     
     seg_file = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
+    seg_file_rh = "/scratch/saiterrami/seg/rh_segmentation1.nii.gz"
+    seg_data_rh = nib.load(seg_file_rh).get_fdata()
+
     #print(seg_file)
 
 # Load the segmentation data
     seg_data = nib.load(seg_file).get_fdata()
-    #seg_data = seg_data[:, :, ::-1]
+    
 
     
-    #seg_data = np.pad(seg_data, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
-    #seg_data = process_volume(seg_data, data_name)
+    
     
     print("taille de la seg",seg_data.shape)
     
-    #seg_data = np.pad(seg_data, ((2, 2), (0, 0), (0, 0)), 'constant', constant_values=0)
-     
-    
-   
-
-# Convert the segmentation data to a PyTorch tensor
-    #segnet = torch.from_numpy((seg_data)).to(device)
-    
-    
-    #segnet = " /scratch/saiterrami/seg/seg_img.nii.gz"
-    #print(segnet)
-    #segnet = Unet(c_in=1, c_out=3).to(device)
-    #segnet.load_state_dict(torch.load(model_dir+'model_seg_'+data_name+'_'+tag+'.pt'))
 
     if test_type == 'pred' or test_type == 'eval':
         T = torch.Tensor([0,1]).to(device)
@@ -200,44 +189,7 @@ if __name__ == '__main__':
             brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
-        #volume_in = torch.squeeze(volume_in, dim=0)
-        #volume_in = volume_in # Add a batch dimension
-        #volume_in = torch.squeeze(volume_in, dim=0)
-        #print("volume_in",volume_in.shape)
-            
-            #brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
-            
-            #brain_arr = brain.get_fdata()
-            #brain_arr = (brain_arr / 1500.).astype(np.float16)
-       #brain_arr = process_volume(brain_arr, data_name)
-        #volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
-        #calculer min et max adni 
-            
-            
-            
-            
-            #min_value = np.min(brain_arr)
-            #print("le min : ",min_value)
-            #max_value = np.max(brain_arr)
-            #print("le max : ",max_value)
-            #median =np.mean(brain_arr)
-            #print("le median : ",median)
-
-# Define the desired range for voxel intensities
-            #desired_min = 0  # Update with your desired minimum intensity value
-            #desired_max = 255  # Update with your desired maximum intensity value
-
-# Calculate the scaling factor
-            #scaling_factor = (desired_max - desired_min) / (max_value - min_value)
-            
-            
-            
-            #brain_arr = (((brain_arr - min_value) * scaling_factor) + desired_min)
-            #brain_arr = (brain_arr / 20).astype(np.float16)
-            
-        #brain_arr = process_volume(brain_arr, data_name)
-        #volume_in = torch.Tensor(brain_arr).to(device)
-        #volume_in = torch.squeeze(volume_in, dim=0)
+        
             
 
         # ------- predict segmentation ------- 
@@ -258,9 +210,12 @@ if __name__ == '__main__':
             seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
             seg_pred = torch.squeeze(seg_pred, dim=0)
             print("seg_pred shape:", seg_pred.shape)
-            #print("seg_pred unique values:", torch.unique(seg_pred))
-            #print("volume_in shape:", volume_in.shape)
-            #print("volume_in unique values:", torch.unique(volume_in))
+            
+            
+            
+            
+            
+           
             
             counter = 1  # Initialize the counter
             if surf_hemi == 'lh':
@@ -282,9 +237,10 @@ if __name__ == '__main__':
                 
             
                 
-           # elif surf_hemi == 'rh':
-            #    seg = (seg_pred==2).cpu().numpy()  # rh
-             #   seg = seg[2:-2, :, :]  # Remove padding
+            elif surf_hemi == 'rh':
+                
+                seg = (seg_data_rh==2).cpu().numpy()  # rh
+                #seg = seg[2:-2, :, :]  # Remove padding
               #  seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
                # print(seg_img.shape)
 
@@ -494,23 +450,6 @@ if __name__ == '__main__':
         print('Results saved to "results.txt"')
 
     # ------- report the final results ------- 
-"""
-    if test_type == 'eval':
-        print('======== wm ========')
-        print('assd mean:', np.mean(assd_wm_all))
-        print('assd std:', np.std(assd_wm_all))
-        print('hd mean:', np.mean(hd_wm_all))
-        print('hd std:', np.std(hd_wm_all))
-        print('sif mean:', np.mean(sif_wm_all))
-        print('sif std:', np.std(sif_wm_all))
-        print('======== gm ========')
-        print('assd mean:', np.mean(assd_gm_all))
-        print('assd std:', np.std(assd_gm_all))
-        print('hd mean:', np.mean(hd_gm_all))
-        print('hd std:', np.std(hd_gm_all))
-        print('sif mean:', np.mean(sif_gm_all))
-        print('sif std:', np.std(sif_gm_all))
-       
-"""   # ------- report the final results ------- 
- 
+
+
  
