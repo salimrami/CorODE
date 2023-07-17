@@ -105,7 +105,7 @@ def seg2surf(seg,
     for j in range(n_smooth):    # smooth and inflate the mesh
         v_mc = laplacian_smooth(v_mc, f_mc, 'uniform', lambd=1)
     v_mc = v_mc[0].cpu().numpy()
-    v_mc = v_mc[:,[0,1,2]].copy()
+    #v_mc = v_mc[:,[0,1,2]].copy()
     f_mc = f_mc[0].cpu().numpy()
     
     return v_mc, f_mc
