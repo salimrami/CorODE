@@ -105,7 +105,7 @@ def seg2surf(seg,
     for j in range(n_smooth):    # smooth and inflate the mesh
         v_mc = laplacian_smooth(v_mc, f_mc, 'uniform', lambd=1)
     v_mc = v_mc[0].cpu().numpy()
-    v_mc = v_mc[:,[0,1,2]].copy()
+    #v_mc = v_mc[:,[0,1,2]].copy()
     f_mc = f_mc[0].cpu().numpy()
     
     return v_mc, f_mc
@@ -198,7 +198,6 @@ if __name__ == '__main__':
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr /  20).astype(np.float16)
             brain_arr = brain_arr[2:-2, :, :]  # Remove padding
-            print(brain_arr.shape,"after removing the padding")
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
         #volume_in = torch.squeeze(volume_in, dim=0)
