@@ -200,7 +200,7 @@ if __name__ == '__main__':
 
         with torch.no_grad():
             
-            seg_pred = seg_data
+            seg_pred = seg_data_rh #seg_data
             #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
             seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
             seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
