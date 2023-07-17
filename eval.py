@@ -45,7 +45,7 @@ def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
              alpha=16,
-             level=1,
+             level=0.8,
              n_smooth=2):
     """
     Extract the surface based on the segmentation.
@@ -75,7 +75,7 @@ def seg2surf(seg,
 
     # ------ marching cubes ------
     v_mc, f_mc, _, _ = marching_cubes(-sdf_topo, level=-level, method='lorensen')
-    #v_mc = v_mc[:,[2,1,0]].copy()
+    v_mc = v_mc[:,[2,1,0]].copy()
     #v_mc = v_mc[:,[0,1,2]].copy()
 
     f_mc = f_mc.copy()
