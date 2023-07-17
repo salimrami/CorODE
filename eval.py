@@ -44,8 +44,8 @@ topo_correct = topology()
 def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
-             alpha=20,
-             level=1,
+             alpha=16,
+             level=0.5,
              n_smooth=0):
     """
     Extract the surface based on the segmentation.
@@ -311,7 +311,7 @@ if __name__ == '__main__':
 
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
-                              alpha=20, level=1, n_smooth=0)
+                              alpha=20, level=0.5, n_smooth=0)
         v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
