@@ -137,7 +137,7 @@ if __name__ == '__main__':
     # ------ load models ------
     
     seg_file = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
-    seg_file_rh = "/scratch/saiterrami/seg/rh_segmentation1.nii.gz"
+    seg_file_rh = "/scratch/saiterrami/seg/lh_seg.nii.gz"
     seg_data_rh = nib.load(seg_file_rh).get_fdata()
 
     #print(seg_file)
