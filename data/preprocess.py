@@ -22,7 +22,6 @@ for a new dataset, but the matching is important to make everything work.
 
 #(224, 251, 203)
 #203 251 224 
-#101 125 110
 import numpy as np
 
 def process_volume(x, data_name='fetal'):
@@ -43,7 +42,7 @@ def process_surface(v, f, data_name='fetal'):
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         # normalize to [-1, 1] par division par 2
-        v = (v - [101, 125, 110]) / 125
+        v = (v - [104, 104, 78]) / 104
         print("Size of v:", v.shape)
         print("Size of f:", f.shape)
         print("Data has been normalized. Min value:", np.min(v), "Max value:", np.max(v))
@@ -59,7 +58,7 @@ def process_surface(v, f, data_name='fetal'):
 
 def process_surface_inverse(v, f, data_name='fetal'):
     if data_name == 'fetal':
-        v = v * 125 + [101, 1125, 110]
+        v = v * 104 + [104, 104, 78]
         v = v[:,[2,1,0]].copy()
         f = f[:,[2,1,0]].copy()
         
