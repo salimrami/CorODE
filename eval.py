@@ -45,7 +45,7 @@ def seg2surf(seg,
              data_name='fetal',
              sigma=0.5,
              alpha=16,
-             level=0.8,
+             level=1,
              n_smooth=2):
     """
     Extract the surface based on the segmentation.
@@ -83,8 +83,8 @@ def seg2surf(seg,
     #print(D1,D2,D3)
     D = max(D1,D2,D3)
     #jai decommenté ca pour la normalisation des surface pial et white
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
+    v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
     #print("v_mc apres normalisation",v_mc)
 
     #inverser ca !
