@@ -29,7 +29,8 @@ import numpy as np
 
 def process_volume(x, data_name='fetal'):
     if data_name == 'fetal':
-        x = np.pad(x, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
+        #x = np.pad(x, ((2,2),(0,0),(0,0)), 'constant', constant_values=0)
+        x = x
         print("x de preprocess",x.shape)
         return x[None].copy()
     else:
