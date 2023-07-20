@@ -46,7 +46,7 @@ def seg2surf(seg,
              sigma=0.5,
              alpha=16,
              level=0.5,
-             n_smooth=0):
+             n_smooth=2):
     """
     Extract the surface based on the segmentation.
     
@@ -185,7 +185,7 @@ if __name__ == '__main__':
         if data_name == 'fetal':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr /  700).astype(np.float16)
+            brain_arr = (brain_arr / 1773).astype(np.float16)
             brain_arr = brain_arr[2:-2, :, :]  # Remove padding
         brain_arr = process_volume(brain_arr, data_name)
         volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
@@ -267,7 +267,7 @@ if __name__ == '__main__':
 
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
-                              alpha=16, level=0.5, n_smooth=0)
+                              alpha=16, level=0.5, n_smooth=2)
         v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
