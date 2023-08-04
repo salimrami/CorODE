@@ -57,70 +57,40 @@ def seg2surf(seg,
     n_smooth: iteration of Laplacian smoothing
     """
     
-    # ------ connected components checking ------ 
-    #cc, nc = compute_cc(seg, connectivity=2, return_num=True)
+    # Calculate the connected components
     cc, nc = compute_cc(seg, connectivity=2, return_num=True)
 
-    #cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i) for i in range(1, nc+1)]))
+    # Find the largest connected component
+    cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i) for i in range(1, nc+1)]))
     
-    count_list = [np.count_nonzero(cc == i) for i in range(1, nc+1)]
-    if len(count_list) == 0:
-    # Handle the empty case, e.g., set cc_id to some default value or raise an error
-        cc_id = -1  # Set a default value for cc_id
-    else:
-        cc_id = 1 + np.argmax(np.array(count_list))
+    seg = (cc == cc_id).astype(np.float64)
 
-
-
-
-    cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i)\
-                                    for i in range(1, nc+1)]))
-    seg = (cc==cc_id).astype(np.float64)
-
-    # ------ generate signed distance function ------ 
+    # Generate signed distance function
     sdf = -cdt(seg) + cdt(1-seg)
     sdf = sdf.astype(float)
     sdf = gaussian(sdf, sigma=sigma)
 
-     # ------ topology correction ------
-    sdf_topo= topo_correct.apply(sdf, threshold=alpha)
+    # Topology correction
+    sdf_topo = topo_correct.apply(sdf, threshold=alpha)
 
-    # ------ marching cubes ------
+    # Marching cubes
     v_mc, f_mc, _, _ = marching_cubes(-sdf_topo, level=-level, method='lorensen')
-    v_mc = v_mc[:,[2,1,0]].copy()
-    #v_mc = v_mc[:,[0,1,2]].copy()
-
+    v_mc = v_mc[:, [2, 1, 0]].copy()
     f_mc = f_mc.copy()
-    D1,D2,D3 = sdf_topo.shape
-    #print(D1,D2,D3)
-    D = max(D1,D2,D3)
-    #jai decommenté ca pour la normalisation des surface pial et white
-    #v_mc = (2*v_mc - [D3, D2, D1]) / D   # rescale to [-1,1]
-    #v_mc = (2*v_mc - [D1, D2, D3]) / D   # rescale to [-1,1]
-    #print("v_mc apres normalisation",v_mc)
 
-    #inverser ca !
-    #sauvegarder freesurfer
-    
-    
-    # ------ bias correction ------
-    # Note that this bias is introduced by FreeSurfer.
-    # FreeSurfer changed the size of the input MRI, 
-    # but the affine matrix of the MRI was not changed.
-    # So this bias is caused by the different between 
-    # the original and new affine matrix.
-    
-        
-    # ------ mesh smoothing ------
+    D1, D2, D3 = sdf_topo.shape
+    D = max(D1, D2, D3)
+
+    # Mesh smoothing
     v_mc = torch.Tensor(v_mc).unsqueeze(0).to(device)
     f_mc = torch.LongTensor(f_mc).unsqueeze(0).to(device)
     for j in range(n_smooth):    # smooth and inflate the mesh
         v_mc = laplacian_smooth(v_mc, f_mc, 'uniform', lambd=1)
     v_mc = v_mc[0].cpu().numpy()
-    #v_mc = v_mc[:,[0,1,2]].copy()
     f_mc = f_mc[0].cpu().numpy()
     
     return v_mc, f_mc
+
 
 
 if __name__ == '__main__':
