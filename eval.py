@@ -60,8 +60,12 @@ def seg2surf(seg,
     # ------ connected components checking ------ 
     #cc, nc = compute_cc(seg, connectivity=2, return_num=True)
     cc, nc = compute_cc(seg, connectivity=2, return_num=True)
+#j'ai rajouté ca
+    cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i) for i in range(1, nc+1)]))
 
-    cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i)\
+
+
+    #cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i)\
                                     for i in range(1, nc+1)]))
     seg = (cc==cc_id).astype(np.float64)
 
