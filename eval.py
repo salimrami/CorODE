@@ -62,7 +62,14 @@ def seg2surf(seg,
     cc, nc = compute_cc(seg, connectivity=2, return_num=True)
 
     #cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i) for i in range(1, nc+1)]))
-    cc_id = 1 + np.argmax(np.array([np.count_nonzero(cc == i) for i in range(1, nc+1)]))
+    
+    count_list = [np.count_nonzero(cc == i) for i in range(1, nc+1)]
+    if len(count_list) == 0:
+    # Handle the empty case, e.g., set cc_id to some default value or raise an error
+        cc_id = -1  # Set a default value for cc_id
+    else:
+        cc_id = 1 + np.argmax(np.array(count_list))
+
 
 
 
