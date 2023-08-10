@@ -165,7 +165,7 @@ def compute_mesh_distance(v_pred, v_gt, f_pred, f_gt, n_pts=100000, seed=10086):
 
 #from mesh_intersection.bvh_search_tree import BVH
 
-def check_self_intersect(v, f, collisions=8):
+#def check_self_intersect(v, f, collisions=8):
     """
     Check mesh self-intersections.
     
