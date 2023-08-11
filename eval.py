@@ -140,7 +140,7 @@ if __name__ == '__main__':
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 255.).astype(np.float32)
         elif data_name == 'dhcp':
-            brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
+            brain = nib.load(data_dir, subid, subid+ '_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 20).astype(np.float16)
         brain_arr = process_volume(brain_arr, data_name)
