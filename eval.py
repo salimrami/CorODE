@@ -133,18 +133,43 @@ if __name__ == '__main__':
 
     for i in tqdm(range(len(subject_list))):
         subid = subject_list[i]
+        
 
         # ------- load brain MRI ------- 
-        if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 255.).astype(np.float32)
-        elif data_name == 'dhcp':
-            brain = nib.load(data_dir, subid, subid+ '_T2w.nii.gz')
-            brain_arr = brain.get_fdata()
-            brain_arr = (brain_arr / 20).astype(np.float16)
-        brain_arr = process_volume(brain_arr, data_name)
-        volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
+    data_dir = '/scratch/saiterrami/dir'  # Replace with your actual data directory
+    data_name = 'dhcp'  # Assuming this is defined elsewhere
+
+    subject_list = os.listdir(data_dir)
+
+    for index, subid in enumerate(subject_list, start=1):
+        if data_name == 'dhcp':
+            image_path = os.path.join(data_dir, subid, f"{subid}_T2w.nii.gz")
+        
+            if os.path.exists(image_path):
+                brain = nib.load(image_path)
+                brain_arr = brain.get_fdata()
+            
+            # Preprocessing
+                brain_arr = (brain_arr / 40).astype(np.float16)
+            
+            # Further processing
+                brain_arr = process_volume(brain_arr, data_name)
+            
+            # Convert to PyTorch tensor and move to device
+                volume_in = torch.Tensor(brain_arr).unsqueeze(0).to(device)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+     
+        
+
 
         # ------- predict segmentation ------- 
         with torch.no_grad():
