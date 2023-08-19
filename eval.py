@@ -19,6 +19,7 @@ from util.tca import topology
 from model.net import CortexODE, Unet
 from config import load_config
 import time
+from nibabel import gifti
 
 # initialize topology correction
 topo_correct = topology()
@@ -234,6 +235,21 @@ if __name__ == '__main__':
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
+                              alpha=16, level=0.5, n_smooth=2)
+            v_in = v_in[:,[2,1,0]]
+            mesh_init = trimesh.Trimesh(v_in, f_in)
+        
+            v_in, f_in = process_surface(v_in, f_in, data_name)
+            v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
+            mesh_init = trimesh.Trimesh(v_in, f_in)
+            mesh_init.export('/scratch/saiterrami/init/init.obj')
+            nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
+                                         v_in, f_in)
+            gii = nib.gifti.GiftiImage()
+            gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
+            gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
+            nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
 
         # ------- predict cortical surfaces ------- 
         if test_type == 'pred' or test_type == 'eval':
@@ -279,6 +295,25 @@ if __name__ == '__main__':
                                              v_wm_pred, f_wm_pred)
             nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
                                              v_gm_pred, f_gm_pred)
+            white_gii = gifti.GiftiImage()
+            white_data = gifti.GiftiDataArray(v_wm_pred, intent='NIFTI_INTENT_POINTSET')
+            white_faces = gifti.GiftiDataArray(f_wm_pred, intent='NIFTI_INTENT_TRIANGLE')
+            white_gii.add_gifti_data_array(white_data)
+            white_gii.add_gifti_data_array(white_faces)
+            # Save the white geometry to a GIfTI file
+            white_file = result_dir + data_name + '_' + surf_hemi + '_' + subid + '.white.gii'
+            nib.save(white_gii, white_file)
+            # Create a GiftiImage object for the pial geometry
+            pial_gii = gifti.GiftiImage()
+            pial_data = gifti.GiftiDataArray(v_gm_pred, intent='NIFTI_INTENT_POINTSET')
+            pial_faces = gifti.GiftiDataArray(f_gm_pred, intent='NIFTI_INTENT_TRIANGLE')
+            pial_gii.add_gifti_data_array(pial_data)
+            pial_gii.add_gifti_data_array(pial_faces)
+
+    # Save the pial geometry to a GIfTI file
+            pial_file = result_dir + data_name + '_' + surf_hemi + '_' + subid + '.pial.gii'
+            nib.save(pial_gii, pial_file)
+
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
