@@ -414,11 +414,12 @@ if __name__ == '__main__':
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
+#j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
 
-            v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
-            f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
-            v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
-            f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
+            v_wm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
 
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
