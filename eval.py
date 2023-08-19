@@ -251,7 +251,7 @@ if __name__ == '__main__':
             init_faces = gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE')
             init_gii.add_gifti_data_array(init_data)
             init_gii.add_gifti_data_array(init_faces)
-            init_file = result_dir + data_name + '_' + surf_hemi + '_' + subid + '.init.gii'
+            init_file = "/scratch/saiterrami/results/"
             nib.save(init_gii, init_file)
 
 
