@@ -144,12 +144,11 @@ def point_to_mesh_dist(pcls, meshes):
 def compute_mesh_distance(v_pred, v_inn, f_pred, f_inn, n_pts=100000, seed=10086):
     """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD). """
     
-    # Assurez-vous que les dimensions des sommets et des faces correspondent
     assert v_pred.shape == v_inn.shape, "Les dimensions de v_pred et v_inn ne correspondent pas."
     assert f_pred.shape == f_inn.shape, "Les dimensions de f_pred et f_inn ne correspondent pas."
     
-    mesh_pred = Meshes(verts=v_pred, faces=f_pred)
-    mesh_gt = Meshes(verts=v_inn, faces=f_inn)
+    mesh_pred = Meshes(verts=[v_pred], faces=[f_pred])
+    mesh_gt = Meshes(verts=[v_inn], faces=[f_inn])
     pts_pred = sample_points_from_meshes(mesh_pred, num_samples=n_pts)
     pts_gt = sample_points_from_meshes(mesh_gt, num_samples=n_pts)
     pcl_pred = Pointclouds(pts_pred)
@@ -165,6 +164,7 @@ def compute_mesh_distance(v_pred, v_inn, f_pred, f_inn, n_pts=100000, seed=10086
     hd = max(x_quantile, y_quantile)
     
     return assd, hd
+
 
 
 #from mesh_intersection.bvh_search_tree import BVH
