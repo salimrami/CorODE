@@ -249,8 +249,9 @@ if __name__ == '__main__':
             gii = nib.gifti.GiftiImage()
             gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
             gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
-            gii_file_path = '/scratch/saiterrami/init/' + data_name + 'init' + '_init.gii'
+            gii_file_path = '/scratch/saiterrami/results/' + data_name + 'init' + '_init.gii'
             nib.save(gii, gii_file_path)
+
 
 
         # ------- predict cortical surfaces ------- 
