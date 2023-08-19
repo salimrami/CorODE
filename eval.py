@@ -416,10 +416,15 @@ if __name__ == '__main__':
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 #j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
 
-            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device = "CUDA")
-            f_inn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device= "CUDA")
-            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device = "CUDA")
-            f_nn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device = "CUDA")
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+            v_in = torch.Tensor(v_in).unsqueeze(0)
+            f_in = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0)
+            f_nn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0)
+
+            v_inn = v_in.to(device)
+            f_inn = f_in.to(device)
+            f_nn = f_nn.to(device)
 
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_inn, f_wm_pred, f_inn)
