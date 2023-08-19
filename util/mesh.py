@@ -144,6 +144,11 @@ def point_to_mesh_dist(pcls, meshes):
 def compute_mesh_distance(v_pred, v_inn, f_pred, f_inn, n_pts=100000, seed=10086):
     """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD). """
     
+    v_inn = v_inn.unsqueeze(0)  # Ajoute une dimension pour correspondre à la forme (N, 3)
+    f_inn = f_inn.unsqueeze(0)  # Ajoute une dimension pour correspondre à la forme (M, 3)
+
+# Créez les objets Meshes en utilisant les tenseurs modifiés
+    mesh_gt = Meshes(verts=v_inn, faces=f_inn)
     mesh_pred = Meshes(verts=v_pred, faces=f_pred)
     mesh_gt = Meshes(verts=v_inn, faces=f_inn)
     pts_pred = sample_points_from_meshes(mesh_pred, num_samples=n_pts)
