@@ -419,7 +419,10 @@ if __name__ == '__main__':
             device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
             v_inn = torch.tensor(v_in, device=device).unsqueeze(0)
-            f_inn = torch.tensor(f_in.astype(np.float32), device=device).long().unsqueeze(0)
+            f_inn = torch.tensor(f_in, device=device, dtype=torch.float32).long().unsqueeze(0)
+
+# ... votre code ici ...
+
 
 # ... votre code ici ...
 
