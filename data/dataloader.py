@@ -70,7 +70,7 @@ def load_seg_data(config, data_usage='train'):
             seg_arr += 1 * seg_left
             seg_arr += 2 * seg_right
     
-        elif data_name == 'fetal':
+        elif data_name == 'dhcp':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 20).astype(np.float32)
@@ -166,7 +166,7 @@ def load_surf_data(config, data_usage='train'):
             brain = nib.load(data_dir+subid+'/mri/orig.mgz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 255.).astype(np.float32)
-        elif data_name == 'fetal':
+        elif data_name == 'dhcp':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 20).astype(np.float16)
@@ -185,7 +185,7 @@ def load_surf_data(config, data_usage='train'):
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
             elif data_name == 'adni':
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-            elif data_name == 'fetal':
+            elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     v_gt, f_gt = surf_gt.agg_data('pointset'), surf_gt.agg_data('triangle')
@@ -207,7 +207,7 @@ def load_surf_data(config, data_usage='train'):
                 v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
             elif data_name == 'adni':
                 v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-            elif data_name == 'fetal':
+            elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_in = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     v_in, f_in = surf_in.agg_data('pointset'), surf_in.agg_data('triangle')
@@ -234,7 +234,7 @@ def load_surf_data(config, data_usage='train'):
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
             elif data_name == 'adni':
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
-            elif data_name == 'fetal':
+            elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
                     v_gt, f_gt = surf_gt.agg_data('pointset'), surf_gt.agg_data('triangle')
