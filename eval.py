@@ -409,7 +409,7 @@ if __name__ == '__main__':
                 v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
 
         # ------- evaluation -------
-        if test_type == 'eval':
+        if test_type == 'pred':
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
@@ -422,8 +422,8 @@ if __name__ == '__main__':
             f_gm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_in, f_wm_pred, f_in)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_in, f_gm_pred, f_in)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
@@ -445,28 +445,18 @@ if __name__ == '__main__':
 
 
 # ------- report the final results ------- 
-    if test_type == 'eval':
-        result_file = '/scratch/saiterrami/results/results.txt'
-
-        with open('metrics.txt', 'w') as file:
-            file.write('======== wm ========\n')
-            file.write('assd mean: {}\n'.format(np.mean(assd_wm_all)))
-            file.write('assd std: {}\n'.format(np.std(assd_wm_all)))
-            file.write('hd mean: {}\n'.format(np.mean(hd_wm_all)))
-            file.write('hd std: {}\n'.format(np.std(hd_wm_all)))
-            file.write('sif mean: {}\n'.format(np.mean(sif_wm_all)))
-            file.write('sif std: {}\n'.format(np.std(sif_wm_all)))
-            file.write('======== gm ========\n')
-            file.write('assd mean: {}\n'.format(np.mean(assd_gm_all)))
-            file.write('assd std: {}\n'.format(np.std(assd_gm_all)))
-            file.write('hd mean: {}\n'.format(np.mean(hd_gm_all)))
-            file.write('hd std: {}\n'.format(np.std(hd_gm_all)))
-            file.write('sif mean: {}\n'.format(np.mean(sif_gm_all)))
-            file.write('sif std: {}\n'.format(np.std(sif_gm_all)))
-
-        print('Results saved to "results.txt"')
-
-    # ------- report the final results ------- 
-
-
- 
+    if test_type == 'pred':
+        print('======== wm ========')
+        print('assd mean:', np.mean(assd_wm_all))
+        print('assd std:', np.std(assd_wm_all))
+        print('hd mean:', np.mean(hd_wm_all))
+        print('hd std:', np.std(hd_wm_all))
+        print('sif mean:', np.mean(sif_wm_all))
+        print('sif std:', np.std(sif_wm_all))
+        print('======== gm ========')
+        print('assd mean:', np.mean(assd_gm_all))
+        print('assd std:', np.std(assd_gm_all))
+        print('hd mean:', np.mean(hd_gm_all))
+        print('hd std:', np.std(hd_gm_all))
+        print('sif mean:', np.mean(sif_gm_all))
+        print('sif std:', np.std(sif_gm_all))
