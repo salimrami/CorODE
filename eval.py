@@ -416,14 +416,14 @@ if __name__ == '__main__':
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 #j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
 
-            v_wm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
-            f_wm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
-            v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
-            f_gm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
+            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_inn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
+            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_nn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_in, f_wm_pred, f_in)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_in, f_gm_pred, f_in)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_inn, f_wm_pred, f_inn)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_inn, f_gm_pred, f_inn)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
