@@ -418,13 +418,14 @@ if __name__ == '__main__':
 
             device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-            v_in = torch.Tensor(v_in).unsqueeze(0)
-            f_in = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0)
-            f_nn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0)
+            v_inn = torch.tensor(v_in, device=device).unsqueeze(0)
+            f_inn = torch.tensor(f_in.astype(np.float32), device=device).long().unsqueeze(0)
 
-            v_inn = v_in.to(device)
-            f_inn = f_in.to(device)
-            f_nn = f_nn.to(device)
+# ... votre code ici ...
+
+
+# ... votre code ici ...
+
 
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_inn, f_wm_pred, f_inn)
