@@ -418,7 +418,7 @@ if __name__ == '__main__':
 
             v_inn = torch.Tensor(v_in).unsqueeze(0).to(device = "CUDA")
             f_inn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device= "CUDA")
-            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device = "CUDA)
+            v_inn = torch.Tensor(v_in).unsqueeze(0).to(device = "CUDA")
             f_nn = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device = "CUDA")
 
             # compute ASSD and HD
