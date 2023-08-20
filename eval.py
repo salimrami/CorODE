@@ -474,61 +474,7 @@ if __name__ == '__main__':
 
 
 
-import torch
-import numpy as np
-import nibabel as nib
-from pytorch3d.ops import sample_points_from_meshes
-from pytorch3d.structures import Meshes, Pointclouds
-from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
-point_face_distance = _PointFaceDistance.apply
-
-def load_gifti_data(mesh_path):
-    """ Load mesh data from a GIFTI file and return vertices and faces. """
-    mesh = nib.load(mesh_path)
-    vertices = torch.tensor(mesh.darrays[0].data, dtype=torch.float32)
-    faces = torch.tensor(mesh.darrays[1].data, dtype=torch.int64)
-    return vertices, faces
-
-def compute_surface_distance(mesh_pred_path, mesh_gt_path, n_pts=100000):
-    """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD) 
-    between two meshes given their file paths. """
-    
-    v_sur1, f_sur1 = load_gifti_data(mesh_pred_path)
-    v_sur2, f_sur2 = load_gifti_data(mesh_gt_path)
-    
-    mesh_pred = Meshes(verts=[v_sur1], faces=[f_sur1])
-    mesh_gt = Meshes(verts=[v_sur2], faces=[f_sur2])
-    
-    # Sample points from meshes
-    pts_pred = sample_points_from_meshes(mesh_pred, num_samples=n_pts)
-    pts_gt = sample_points_from_meshes(mesh_gt, num_samples=n_pts)
-    pcl_pred = Pointclouds(pts_pred)
-    pcl_gt = Pointclouds(pts_gt)
-
-    # Compute point-to-mesh distances using _PointFaceDistance
-    point_face_distance = _PointFaceDistance()
-    x_dist = point_face_distance(pcl_pred, mesh_gt)
-    y_dist = point_face_distance(pcl_gt, mesh_pred)
-
-    # Calculate ASSD and HD
-    assd = (x_dist.mean().item() + y_dist.mean().item()) / 2
-
-    x_quantile = torch.quantile(x_dist, 0.9).item()
-    y_quantile = torch.quantile(y_dist, 0.9).item()
-    hd = max(x_quantile, y_quantile)
-    
-    return assd, hd
-
-# Chemins des fichiers GIFTI pour les deux surfaces
-mesh_pred_path = "/scratch/saiterrami/results/fetalinit_init.gii"
-mesh_gt_path = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
-
-# Calcul des distances
-assd, hd = compute_surface_distance(mesh_pred_path, mesh_gt_path)
-
-print('ASSD:', assd)
-print('HD:', hd)
 
        
         
