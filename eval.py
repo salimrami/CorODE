@@ -470,20 +470,29 @@ if __name__ == '__main__':
        
         
        
+
+
 import torch
+import numpy as np
 from pytorch3d.structures import Meshes
 from pytorch3d.ops import sample_points_from_meshes, point_to_mesh_distance
 
-def compute_surface_distance_from_paths(mesh_pred_path, mesh_gt_path, n_pts=100000):
+def load_mesh_data(mesh_path):
+    """ Load mesh data from a file and return vertices and faces. """
+    mesh = trimesh.load(mesh_path)
+    vertices = torch.tensor(mesh.vertices, dtype=torch.float32)
+    faces = torch.tensor(mesh.faces, dtype=torch.int64)
+    return vertices, faces
+
+def compute_surface_distance(mesh_pred_path, mesh_gt_path, n_pts=100000):
     """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD) 
     between two meshes given their file paths. """
     
-    # Load meshes from file paths
-    mesh_pred = Meshes(verts=[torch.zeros(1)], faces=[torch.zeros(1, 3)])  # Dummy initialization
-    mesh_gt = Meshes(verts=[torch.zeros(1)], faces=[torch.zeros(1, 3)])     # Dummy initialization
+    v_sur1, f_sur1 = load_mesh_data(mesh_pred_path)
+    v_sur2, f_sur2 = load_mesh_data(mesh_gt_path)
     
-    mesh_pred.load_objs(mesh_pred_path)
-    mesh_gt.load_objs(mesh_gt_path)
+    mesh_pred = Meshes(verts=[v_sur1], faces=[f_sur1])
+    mesh_gt = Meshes(verts=[v_sur2], faces=[f_sur2])
     
     # Sample points from meshes
     pts_pred = sample_points_from_meshes(mesh_pred, num_samples=n_pts)
@@ -504,11 +513,17 @@ def compute_surface_distance_from_paths(mesh_pred_path, mesh_gt_path, n_pts=1000
     
     return assd, hd
 
-# Example usage
+# Chemins des fichiers de maillage pour les deux surfaces
 mesh_pred_path = "/scratch/saiterrami/results/fetalinit_init.gii"
 mesh_gt_path = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
-assd, hd = compute_surface_distance_from_paths(mesh_pred_path, mesh_gt_path)
-print(f"ASSD: {assd}, HD: {hd}")
+
+# Calcul des distances
+assd, hd = compute_surface_distance(mesh_pred_path, mesh_gt_path)
+
+print('ASSD:', assd)
+print('HD:', hd)
+
+
 
        
         
