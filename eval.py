@@ -474,30 +474,26 @@ if __name__ == '__main__':
 
 
 
-from pytorch3d.ops import sample_points_from_meshes
-from pytorch3d.structures import Meshes, Pointclouds
-from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
-
 import torch
 import numpy as np
-import trimesh
+import nibabel as nib
 from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.structures import Meshes, Pointclouds
 from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
-def load_mesh_data(mesh_path):
-    """ Load mesh data from a file and return vertices and faces. """
-    mesh = trimesh.load(mesh_path)
-    vertices = torch.tensor(mesh.vertices, dtype=torch.float32)
-    faces = torch.tensor(mesh.faces, dtype=torch.int64)
+def load_gifti_data(mesh_path):
+    """ Load mesh data from a GIFTI file and return vertices and faces. """
+    mesh = nib.load(mesh_path)
+    vertices = torch.tensor(mesh.darrays[0].data, dtype=torch.float32)
+    faces = torch.tensor(mesh.darrays[1].data, dtype=torch.int64)
     return vertices, faces
 
 def compute_surface_distance(mesh_pred_path, mesh_gt_path, n_pts=100000):
     """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD) 
     between two meshes given their file paths. """
     
-    v_sur1, f_sur1 = load_mesh_data(mesh_pred_path)
-    v_sur2, f_sur2 = load_mesh_data(mesh_gt_path)
+    v_sur1, f_sur1 = load_gifti_data(mesh_pred_path)
+    v_sur2, f_sur2 = load_gifti_data(mesh_gt_path)
     
     mesh_pred = Meshes(verts=[v_sur1], faces=[f_sur1])
     mesh_gt = Meshes(verts=[v_sur2], faces=[f_sur2])
@@ -522,7 +518,7 @@ def compute_surface_distance(mesh_pred_path, mesh_gt_path, n_pts=100000):
     
     return assd, hd
 
-# Chemins des fichiers de maillage pour les deux surfaces
+# Chemins des fichiers GIFTI pour les deux surfaces
 mesh_pred_path = "/scratch/saiterrami/results/fetalinit_init.gii"
 mesh_gt_path = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
 
@@ -531,7 +527,6 @@ assd, hd = compute_surface_distance(mesh_pred_path, mesh_gt_path)
 
 print('ASSD:', assd)
 print('HD:', hd)
-
 
        
         
