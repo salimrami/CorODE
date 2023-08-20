@@ -478,6 +478,13 @@ from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.structures import Meshes, Pointclouds
 from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
+import torch
+import numpy as np
+import trimesh
+from pytorch3d.ops import sample_points_from_meshes
+from pytorch3d.structures import Meshes, Pointclouds
+from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
+
 def load_mesh_data(mesh_path):
     """ Load mesh data from a file and return vertices and faces. """
     mesh = trimesh.load(mesh_path)
@@ -501,9 +508,10 @@ def compute_surface_distance(mesh_pred_path, mesh_gt_path, n_pts=100000):
     pcl_pred = Pointclouds(pts_pred)
     pcl_gt = Pointclouds(pts_gt)
 
-    # Compute point-to-mesh distances
-    x_dist = point_to_mesh_distance(pcl_pred, mesh_gt)
-    y_dist = point_to_mesh_distance(pcl_gt, mesh_pred)
+    # Compute point-to-mesh distances using _PointFaceDistance
+    point_face_distance = _PointFaceDistance()
+    x_dist = point_face_distance(pcl_pred, mesh_gt)
+    y_dist = point_face_distance(pcl_gt, mesh_pred)
 
     # Calculate ASSD and HD
     assd = (x_dist.mean().item() + y_dist.mean().item()) / 2
@@ -523,7 +531,6 @@ assd, hd = compute_surface_distance(mesh_pred_path, mesh_gt_path)
 
 print('ASSD:', assd)
 print('HD:', hd)
-
 
 
        
