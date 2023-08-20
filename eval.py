@@ -481,6 +481,8 @@ from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.structures import Meshes, Pointclouds
 from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
+point_face_distance = _PointFaceDistance.apply
+
 def load_gifti_data(mesh_path):
     """ Load mesh data from a GIFTI file and return vertices and faces. """
     mesh = nib.load(mesh_path)
