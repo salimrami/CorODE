@@ -535,7 +535,7 @@ def compute_mesh_distance(mesh_path1, mesh_path2, n_pts=100000):
     return assd, hd
 
 # Fournissez les chemins des fichiers GIfTI de surface ici
-mesh_path1 = "/scratch/saiterrami/results/fetalinit_init.gii"
+mesh_path1 = "/scratch/saiterrami/results/fetal_lh_fetus_data.pial.gii"
 mesh_path2 = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
 
 assd, hd = compute_mesh_distance(mesh_path1, mesh_path2)
