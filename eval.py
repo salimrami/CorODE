@@ -386,7 +386,7 @@ if __name__ == '__main__':
 
             
         # ------- load ground truth surfaces ------- 
-        """if test_type == 'eval':
+        if test_type == 'eval':
             
             if data_name == 'fetal':
                 if surf_hemi == 'lh':
@@ -406,7 +406,7 @@ if __name__ == '__main__':
                 v_wm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
                 v_tmp = np.ones([v_gm_gt.shape[0],4])
                 v_tmp[:,:3] = v_gm_gt
-                v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]"""
+                v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
 
         # ------- evaluation -------
         if test_type == 'eval':
@@ -415,22 +415,18 @@ if __name__ == '__main__':
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 #j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
-            v_wm_gt= torch.Tensor(v_in).unsqueeze(0).to(device)
-            f_wm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
-            v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
-            f_gm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
 
-            #v_wm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
-            #f_wm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
-            #v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
-            #f_gm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
+            v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
 
 
 
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt ,f_wm_pred, f_wm_gt)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_in, f_wm_pred, f_in)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_in, f_gm_pred, f_in)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
