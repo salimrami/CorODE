@@ -387,13 +387,8 @@ if __name__ == '__main__':
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
-            if data_name == 'hcp':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
-            elif data_name == 'adni':
-                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
-                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
-            elif data_name == 'fetal':
+            
+            if data_name == 'fetal':
                 if surf_hemi == 'lh':
                     surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
