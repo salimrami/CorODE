@@ -463,3 +463,58 @@ if __name__ == '__main__':
         print('hd std:', np.std(hd_gm_all))
         print('sif mean:', np.mean(sif_gm_all))
         print('sif std:', np.std(sif_gm_all))
+        
+        
+        
+        
+       
+        
+       
+import torch
+from pytorch3d.structures import Meshes
+from pytorch3d.ops import sample_points_from_meshes, point_to_mesh_distance
+
+def compute_surface_distance_from_paths(mesh_pred_path, mesh_gt_path, n_pts=100000):
+    """ Compute average symmetric surface distance (ASSD) and Hausdorff distance (HD) 
+    between two meshes given their file paths. """
+    
+    # Load meshes from file paths
+    mesh_pred = Meshes(verts=[torch.zeros(1)], faces=[torch.zeros(1, 3)])  # Dummy initialization
+    mesh_gt = Meshes(verts=[torch.zeros(1)], faces=[torch.zeros(1, 3)])     # Dummy initialization
+    
+    mesh_pred.load_objs(mesh_pred_path)
+    mesh_gt.load_objs(mesh_gt_path)
+    
+    # Sample points from meshes
+    pts_pred = sample_points_from_meshes(mesh_pred, num_samples=n_pts)
+    pts_gt = sample_points_from_meshes(mesh_gt, num_samples=n_pts)
+    pcl_pred = Pointclouds(pts_pred)
+    pcl_gt = Pointclouds(pts_gt)
+
+    # Compute point-to-mesh distances
+    x_dist = point_to_mesh_distance(pcl_pred, mesh_gt)
+    y_dist = point_to_mesh_distance(pcl_gt, mesh_pred)
+
+    # Calculate ASSD and HD
+    assd = (x_dist.mean().item() + y_dist.mean().item()) / 2
+
+    x_quantile = torch.quantile(x_dist, 0.9).item()
+    y_quantile = torch.quantile(y_dist, 0.9).item()
+    hd = max(x_quantile, y_quantile)
+    
+    return assd, hd
+
+# Example usage
+mesh_pred_path = "/scratch/saiterrami/results/fetalinit_init.gii"
+mesh_gt_path = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
+assd, hd = compute_surface_distance_from_paths(mesh_pred_path, mesh_gt_path)
+print(f"ASSD: {assd}, HD: {hd}")
+
+       
+        
+       
+        
+       
+        
+       
+        
