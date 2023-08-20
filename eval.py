@@ -425,8 +425,8 @@ if __name__ == '__main__':
 
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_in, f_wm_pred, f_in)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_in, f_gm_pred, f_in)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
@@ -471,73 +471,4 @@ if __name__ == '__main__':
         
        
 
-import torch
-import nibabel as nib
-from pytorch3d.ops import sample_points_from_meshes
-from pytorch3d.structures import Meshes, Pointclouds
-from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
-point_face_distance = _PointFaceDistance.apply
-
-def point_to_mesh_dist(pcls, meshes):
-    """
-    Compute point to mesh distance based on pytorch3d.loss.point_mesh_face_distance.
-    For original code please see:
-    - https://pytorch3d.readthedocs.io/en/latest/_modules/pytorch3d/loss/point_mesh_distance.html
-    """
-    
-    points = pcls.points_packed()  # (P, 3)
-    points_first_idx = pcls.cloud_to_packed_first_idx()
-    max_points = pcls.num_points_per_cloud().max().item()
-
-    # packed representation for faces
-    verts_packed = meshes.verts_packed()
-    faces_packed = meshes.faces_packed()
-    tris = verts_packed[faces_packed]  # (T, 3, 3)
-    tris_first_idx = meshes.mesh_to_faces_packed_first_idx()
-    max_tris = meshes.num_faces_per_mesh().max().item()
-
-    # point to face distance: shape (P,)
-    point_to_face = point_face_distance(
-        points, points_first_idx, tris, tris_first_idx, max_points
-    )
-    return point_to_face.sqrt()
-
-def compute_mesh_distance(mesh_path1, mesh_path2, n_pts=100000):
-    # Load mesh data from GIfTI files
-    surface1 = nib.load(mesh_path1)
-    surface2 = nib.load(mesh_path2)
-    
-    verts_surface1 = surface1.darrays[0].data
-    faces_surface1 = surface1.darrays[1].data
-
-    verts_surface2 = surface2.darrays[0].data
-    faces_surface2 = surface2.darrays[1].data
-    
-    mesh_surface1 = Meshes(verts=torch.FloatTensor(verts_surface1), faces=torch.LongTensor(faces_surface1))
-    mesh_surface2 = Meshes(verts=torch.FloatTensor(verts_surface2), faces=torch.LongTensor(faces_surface2))
-    
-    pts_surface1 = sample_points_from_meshes(mesh_surface1, num_samples=n_pts)
-    pts_surface2 = sample_points_from_meshes(mesh_surface2, num_samples=n_pts)
-    
-    pcl_surface1 = Pointclouds(points=pts_surface1)
-    pcl_surface2 = Pointclouds(points=pts_surface2)
-    
-    x_dist = point_to_mesh_dist(pcl_surface1, mesh_surface2)
-    y_dist = point_to_mesh_dist(pcl_surface2, mesh_surface1)
-
-    assd = (x_dist.mean().item() + y_dist.mean().item()) / 2
-
-    x_quantile = torch.quantile(x_dist, 0.9).item()
-    y_quantile = torch.quantile(y_dist, 0.9).item()
-    hd = max(x_quantile, y_quantile)
-    
-    return assd, hd
-
-# Fournissez les chemins des fichiers GIfTI de surface ici
-mesh_path1 = "/scratch/saiterrami/results/fetal_lh_fetus_data.pial.gii"
-mesh_path2 = "/scratch/saiterrami/results/fetal_lh_fetus_data.white.gii"
-
-assd, hd = compute_mesh_distance(mesh_path1, mesh_path2)
-print("Average Symmetric Surface Distance (ASSD):", assd)
-print("Hausdorff Distance (HD):", hd)
