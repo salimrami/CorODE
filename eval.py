@@ -387,8 +387,13 @@ if __name__ == '__main__':
             
         # ------- load ground truth surfaces ------- 
         if test_type == 'eval':
-            
-            if data_name == 'fetal':
+            if data_name == 'hcp':
+                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
+                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
+            elif data_name == 'adni':
+                v_wm_gt, f_wm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
+                v_gm_gt, f_gm_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
+            elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
                     surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
@@ -414,24 +419,20 @@ if __name__ == '__main__':
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
-#j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
 
             v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
             f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
             v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
             f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
 
-
-
-
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
-            if data_name == 'fetal':  # the resolution is 0.7
-                assd_wm = 0.5*assd_wm
-                assd_gm = 0.5*assd_gm
-                hd_wm = 0.5*hd_wm
-                hd_gm = 0.5*hd_gm
+            if data_name == 'dhcp':  # the resolution is 0.7
+                assd_wm = 0.7*assd_wm
+                assd_gm = 0.7*assd_gm
+                hd_wm = 0.7*hd_wm
+                hd_gm = 0.7*hd_gm
             assd_wm_all.append(assd_wm)
             assd_gm_all.append(assd_gm)
             hd_wm_all.append(hd_wm)
@@ -445,9 +446,7 @@ if __name__ == '__main__':
             sif_wm_all.append(0)
             sif_gm_all.append(0)
 
-
-
-# ------- report the final results ------- 
+    # ------- report the final results ------- 
     if test_type == 'eval':
         print('======== wm ========')
         print('assd mean:', np.mean(assd_wm_all))
@@ -463,9 +462,3 @@ if __name__ == '__main__':
         print('hd std:', np.std(hd_gm_all))
         print('sif mean:', np.mean(sif_gm_all))
         print('sif std:', np.std(sif_gm_all))
-        
-        
-        
-        
-       
-        
