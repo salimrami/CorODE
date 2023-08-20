@@ -448,7 +448,7 @@ if __name__ == '__main__':
 
 
 # ------- report the final results ------- 
-    if test_type == 'pred':
+    if test_type == 'eval':
         print('======== wm ========')
         print('assd mean:', np.mean(assd_wm_all))
         print('assd std:', np.std(assd_wm_all))
