@@ -425,8 +425,8 @@ if __name__ == '__main__':
 
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_in, f_wm_pred, f_in)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_in, f_gm_pred, f_in)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
