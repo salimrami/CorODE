@@ -409,30 +409,24 @@ if __name__ == '__main__':
                 v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
 
         # ------- evaluation -------
-        if test_type == 'pred':
+        if test_type == 'eval':
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 #j'ai changéles v et f de la GT pour mesurer les distances HD ASSD
 
-            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-            v_inn = torch.tensor(v_in, device=device).unsqueeze(0)
-            f_inn = torch.tensor(f_in, device=device, dtype=torch.float32).long().unsqueeze(0)
-
-# ... votre code ici ...
+            v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
 
 
-# ... votre code ici ...
-
-
-# ... votre code ici ...
 
 
             # compute ASSD and HD
-            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_inn, f_wm_pred, f_inn)
-            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_inn, f_gm_pred, f_inn)
+            assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
+            assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
             if data_name == 'fetal':  # the resolution is 0.7
                 assd_wm = 0.5*assd_wm
                 assd_gm = 0.5*assd_gm
