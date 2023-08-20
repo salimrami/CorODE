@@ -129,4 +129,3 @@ class CortexODE(nn.Module):
                 self.neighbors[:,q] = vq[0,0].view(self.m, self.K, self.K, self.K)
         
         return self.neighbors.clone()
-
