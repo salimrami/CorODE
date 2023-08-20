@@ -34,7 +34,7 @@ import torch.nn.functional as F
 from torchdiffeq import odeint_adjoint as odeint
 
 from data.preprocess import process_volume, process_surface, process_surface_inverse
-from util.mesh import laplacian_smooth, compute_normal, compute_mesh_distance, check_self_intersect
+from util.mesh import laplacian_smooth, compute_normal, compute_mesh_distance
 from util.tca import topology
 from model.net import CortexODE
 from config import load_config
