@@ -472,10 +472,11 @@ if __name__ == '__main__':
        
 
 
-import torch
-import numpy as np
-from pytorch3d.structures import Meshes
-from pytorch3d.ops import sample_points_from_meshes, point_to_mesh_distance
+
+
+from pytorch3d.ops import sample_points_from_meshes
+from pytorch3d.structures import Meshes, Pointclouds
+from pytorch3d.loss.point_mesh_distance import _PointFaceDistance
 
 def load_mesh_data(mesh_path):
     """ Load mesh data from a file and return vertices and faces. """
