@@ -170,7 +170,7 @@ if __name__ == '__main__':
             seg_path = os.path.join(seg_dir, seg_filename)
 
         # Charger les données de segmentation
-            seg_data = nib.load(seg_path).get_fdata()
+            seg_data_rh= nib.load(seg_path).get_fdata()
     #seg_file = "/scratch/saiterrami/seg/lh_seg.nii.gz"
     #seg_file_rh = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
     
@@ -186,7 +186,7 @@ if __name__ == '__main__':
     
     
     
-    print("taille de la seg",seg_data.shape)
+    print("taille de la seg",seg_data_rh.shape)
     
 
     if test_type == 'pred' or test_type == 'eval':
