@@ -298,6 +298,7 @@ if __name__ == '__main__':
         v_in, f_in = process_surface(v_in, f_in, data_name)
         v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         
+
         # ------- save initial surface ------- 
         if test_type == 'init':
             mesh_init = trimesh.Trimesh(v_in, f_in)
@@ -386,28 +387,7 @@ if __name__ == '__main__':
 
             
         # ------- load ground truth surfaces ------- 
-        if test_type == 'eval':
-            
-            if data_name == 'fetal':
-                if surf_hemi == 'lh':
-                    surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
-                    surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
-                    v_wm_gt, f_wm_gt = surf_wm_gt.agg_data('pointset'), surf_wm_gt.agg_data('triangle')
-                    v_gm_gt, f_gm_gt = surf_gm_gt.agg_data('pointset'), surf_gm_gt.agg_data('triangle')
-                elif surf_hemi == 'rh':
-                    surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_right_wm.surf.gii')
-                    surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_right_pial.surf.gii')
-                    v_wm_gt, f_wm_gt = surf_wm_gt.agg_data('pointset'), surf_wm_gt.agg_data('triangle')
-                    v_gm_gt, f_gm_gt = surf_gm_gt.agg_data('pointset'), surf_gm_gt.agg_data('triangle')
-
-                # apply the affine transformation provided by brain MRI nifti
-                v_tmp = np.ones([v_wm_gt.shape[0],4])
-                v_tmp[:,:3] = v_wm_gt
-                v_wm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
-                v_tmp = np.ones([v_gm_gt.shape[0],4])
-                v_tmp[:,:3] = v_gm_gt
-                v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
-
+        
         # ------- evaluation -------
         if test_type == 'eval':
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
@@ -415,10 +395,10 @@ if __name__ == '__main__':
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 
-            v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
-            f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
-            v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
-            f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
+            v_wm_gt = torch.Tensor(v_in).unsqueeze(0).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
 
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
