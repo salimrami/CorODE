@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Mon Aug 21 17:47:09 2023
+
+@author: salimrami
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Sun Aug 20 19:24:44 2023
 
 @author: salimrami
@@ -158,23 +166,7 @@ if __name__ == '__main__':
     rho = config.rho # inflation scale
 
     # ------ load models ------
-    
-    
-    seg_file = "/scratch/saiterrami/seg/l-seg.nii.gz"
-    seg_file_rh = "/scratch/saiterrami/seg/l-seg002.nii.gz"
-    seg_data_rh = nib.load(seg_file_rh).get_fdata()
 
-
-    #print(seg_file)
-
-# Load the segmentation data
-    seg_data = nib.load(seg_file).get_fdata()
-    
-
-    
-    
-    
-    print("taille de la seg",seg_data.shape)
     
 
     if test_type == 'pred' or test_type == 'eval':
@@ -219,22 +211,51 @@ if __name__ == '__main__':
 
         # ------- predict segmentation ------- 
             
+        seg_dir = "/scratch/saiterrami/seg/"
 
+    # Liste des noms de fichiers de segmentations (peut être modifié en conséquence)
+        subject_list = sorted(os.listdir(seg_dir))
+
+    # Parcourir chaque fichier de segmentation dans l'ordre de la liste subject_list
+        for seg_filename in tqdm(subject_list):
+            if seg_filename.endswith('_seg.nii.gz'):  # Assurez-vous de filtrer les fichiers de segmentations spécifiques
+            # Construire le chemin complet vers le fichier de segmentation
+                seg_path = os.path.join(seg_dir, seg_filename)
+
+            # Charger les données de segmentation
+                seg_data_rh= nib.load(seg_path).get_fdata()
+        #seg_file = "/scratch/saiterrami/seg/lh_seg.nii.gz"
+        #seg_file_rh = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
+        
+        #seg_data_rh = nib.load(seg_file_rh).get_fdata()
+
+
+        #print(seg_file)
+
+    # Load the segmentation data
+        #seg_data = nib.load(seg_file).get_fdata()
+        
+
+        
+        
+        
+                print("taille de la seg",seg_data_rh.shape)
 
             
 
-        with torch.no_grad():
+                with torch.no_grad():
+                    
             
-            seg_pred = seg_data_rh #seg_data
+                    seg_pred = seg_data_rh #seg_data
             #seg_pred = np.transpose(seg_data, (2, 1, 0))  # Permute les dimensions selon l'ordre (1, 2, 0)
-            seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
-            seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
+                    seg_pred = process_volume(seg_pred, data_name='fetal')  # Prétraitement de seg_pred
+                    seg_pred = seg_pred.squeeze(0)  # Supprime la dimension du batch
             #seg_pred = np.transpose(seg_pred, (2, 0, 1))  # Ajuste les dimensions
             #seg_pred = seg_pred[2:-2, :, :]  # Remove padding
-            segnet = torch.from_numpy((seg_pred)).to(device)
-            seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
-            seg_pred = torch.squeeze(seg_pred, dim=0)
-            print("seg_pred shape:", seg_pred.shape)
+                    segnet = torch.from_numpy((seg_pred)).to(device)
+                    seg_pred = segnet  # Assuming the segmentation data is stored in the first channel
+                    seg_pred = torch.squeeze(seg_pred, dim=0)
+                    print("seg_pred shape:", seg_pred.shape)
             
             
             
@@ -300,14 +321,15 @@ if __name__ == '__main__':
         v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
         mesh_init = trimesh.Trimesh(v_in, f_in)
         #mesh_init.export('/scratch/saiterrami/init/init.obj')
-        output_file_path = os.path.join(result_dir, data_name + 'init_white')
-        nib.freesurfer.io.write_geometry(output_file_path, v_in, f_in)
+        #output_file_path = os.path.join(result_dir, data_name + 'init_white')
+        #nib.freesurfer.io.write_geometry(output_file_path, v_in, f_in)
 
-        
-        gii = nib.gifti.GiftiImage()
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
-        nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
+        #nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
+         #                                v_in, f_in)
+        #gii = nib.gifti.GiftiImage()
+        #gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
+        #gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
+        #nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
 
         # ------- save initial surface ------- 
         if test_type == 'init':
@@ -435,10 +457,10 @@ if __name__ == '__main__':
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
             if data_name == 'fetal':  # the resolution is 0.7
-                assd_wm = 0.7*assd_wm
-                assd_gm = 0.7*assd_gm
-                hd_wm = 0.7*hd_wm
-                hd_gm = 0.7*hd_gm
+                assd_wm = 0.5*assd_wm
+                assd_gm = 0.5*assd_gm
+                hd_wm = 0.5*hd_wm
+                hd_gm = 0.5*hd_gm
             assd_wm_all.append(assd_wm)
             assd_gm_all.append(assd_gm)
             hd_wm_all.append(hd_wm)
