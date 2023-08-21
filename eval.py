@@ -160,7 +160,7 @@ if __name__ == '__main__':
     # ------ load models ------
     
     seg_file = "scratch/saiterrami/seg/l-seg.nii.gz"
-    seg_file_rh = "/scratch/saiterrami/seg/l-seg.nii.gz"
+    seg_file_rh = "/scratch/saiterrami/seg/l-seg002.nii.gz"
     
     seg_data_rh = nib.load(seg_file_rh).get_fdata()
 
