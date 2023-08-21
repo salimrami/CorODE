@@ -255,12 +255,12 @@ if __name__ == '__main__':
             
            
             
-            counter = 1  # Initialize the counter
-            if surf_hemi == 'lh':
-                seg = (seg_pred==1).cpu().numpy()  # lh
+                    counter = 1  # Initialize the counter
+                    if surf_hemi == 'lh':
+                        seg = (seg_pred==1).cpu().numpy()  # lh
                 
                 
-                print("seg shape:", seg.shape)
+                        print("seg shape:", seg.shape)
                 
                     
                 #seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
@@ -275,9 +275,9 @@ if __name__ == '__main__':
                 
             
                 
-            elif surf_hemi == 'rh':
+                    elif surf_hemi == 'rh':
                 
-                seg = (seg_data_rh==2).cpu().numpy()  # rh
+                        seg = (seg_data_rh==2).cpu().numpy()  # rh
                 #seg = seg[2:-2, :, :]  # Remove padding
               #  seg_img = nib.Nifti1Image(seg.astype(np.uint8), brain.affine)
                # print(seg_img.shape)
@@ -305,7 +305,7 @@ if __name__ == '__main__':
 
         # ------- extract initial surface ------- 
         v_in, f_in = seg2surf(seg, data_name, sigma=0.5,
-                              alpha=16, level=0.5, n_smooth=2)
+                                          alpha=16, level=0.5, n_smooth=2)
         v_in = v_in[:,[2,1,0]]
         mesh_init = trimesh.Trimesh(v_in, f_in)
         
