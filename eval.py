@@ -307,7 +307,6 @@ if __name__ == '__main__':
         gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
         gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
         nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
-        
 
         # ------- save initial surface ------- 
         if test_type == 'init':
@@ -397,44 +396,60 @@ if __name__ == '__main__':
 
             
         # ------- load ground truth surfaces ------- 
-        
-        # ------- evaluation -------
         if test_type == 'eval':
             
-    # Choose the appropriate device
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            if data_name == 'fetal':
+                if surf_hemi == 'lh':
+                    surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
+                    surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')
+                    v_wm_gt, f_wm_gt = surf_wm_gt.agg_data('pointset'), surf_wm_gt.agg_data('triangle')
+                    v_gm_gt, f_gm_gt = surf_gm_gt.agg_data('pointset'), surf_gm_gt.agg_data('triangle')
+                elif surf_hemi == 'rh':
+                    surf_wm_gt = nib.load(data_dir+subid+'/'+subid+'_right_wm.surf.gii')
+                    surf_gm_gt = nib.load(data_dir+subid+'/'+subid+'_right_pial.surf.gii')
+                    v_wm_gt, f_wm_gt = surf_wm_gt.agg_data('pointset'), surf_wm_gt.agg_data('triangle')
+                    v_gm_gt, f_gm_gt = surf_gm_gt.agg_data('pointset'), surf_gm_gt.agg_data('triangle')
 
+                # apply the affine transformation provided by brain MRI nifti
+                v_tmp = np.ones([v_wm_gt.shape[0],4])
+                v_tmp[:,:3] = v_wm_gt
+                v_wm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
+                v_tmp = np.ones([v_gm_gt.shape[0],4])
+                v_tmp[:,:3] = v_gm_gt
+                v_gm_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
+
+        # ------- evaluation -------
+        if test_type == 'eval':
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 
-            v_wm_gt = (v_in)
-            f_wm_gt = (f_in)
-            v_gm_gt = (v_in)
-            f_gm_gt = (f_in)
+            v_wm_gt = torch.Tensor(v_wm_gt).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_wm_gt.astype(np.float32)).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_gm_gt).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_gm_gt.astype(np.float32)).unsqueeze(0).to(device)
 
-    # compute ASSD and HD
+            # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
             if data_name == 'fetal':  # the resolution is 0.7
-                assd_wm = 0.7 * assd_wm
-                assd_gm = 0.7 * assd_gm
-                hd_wm = 0.7 * hd_wm
-                hd_gm = 0.7 * hd_gm
+                assd_wm = 0.7*assd_wm
+                assd_gm = 0.7*assd_gm
+                hd_wm = 0.7*hd_wm
+                hd_gm = 0.7*hd_gm
             assd_wm_all.append(assd_wm)
             assd_gm_all.append(assd_gm)
             hd_wm_all.append(hd_wm)
             hd_gm_all.append(hd_gm)
 
-    ### compute percentage of self-intersecting faces
-    ### uncomment below if you have installed torch-mesh-isect
-    ### https://github.com/vchoutas/torch-mesh-isect
-    # sif_wm_all.append(check_self_intersect(v_wm_pred, f_wm_pred, collisions=20))
-    # sif_gm_all.append(check_self_intersect(v_gm_pred, f_gm_pred, collisions=20))
+            ### compute percentage of self-intersecting faces
+            ### uncomment below if you have installed torch-mesh-isect
+            ### https://github.com/vchoutas/torch-mesh-isect
+            # sif_wm_all.append(check_self_intersect(v_wm_pred, f_wm_pred, collisions=20))
+            # sif_gm_all.append(check_self_intersect(v_gm_pred, f_gm_pred, collisions=20))
             sif_wm_all.append(0)
             sif_gm_all.append(0)
-
 
     # ------- report the final results ------- 
     if test_type == 'eval':
