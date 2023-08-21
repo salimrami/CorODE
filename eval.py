@@ -298,17 +298,17 @@ if __name__ == '__main__':
         
         v_in, f_in = process_surface(v_in, f_in, data_name)
         v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
-        mesh_init = trimesh.Trimesh(v_in, f_in)
-        mesh_init.export('/scratch/saiterrami/init/init.obj')
-        output_file_path = os.path.join(result_dir, data_name + 'init_white')
-        nib.freesurfer.io.write_geometry(output_file_path, v_in, f_in)
+        #mesh_init = trimesh.Trimesh(v_in, f_in)
+        #mesh_init.export('/scratch/saiterrami/init/init.obj')
+        #output_file_path = os.path.join(result_dir, data_name + 'init_white')
+        #nib.freesurfer.io.write_geometry(output_file_path, v_in, f_in)
 
-        nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
-                                         v_in, f_in)
-        gii = nib.gifti.GiftiImage()
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
-        gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
-        nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
+        #nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
+                                        # v_in, f_in)
+        #gii = nib.gifti.GiftiImage()
+        #gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
+        #gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
+        #nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
 
         # ------- save initial surface ------- 
         if test_type == 'init':
