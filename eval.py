@@ -158,17 +158,29 @@ if __name__ == '__main__':
     rho = config.rho # inflation scale
 
     # ------ load models ------
+    seg_dir = "/scratch/saiterrami/seg/"
+
+# Liste des noms de fichiers de segmentations (peut être modifié en conséquence)
+    subject_list = sorted(os.listdir(seg_dir))
+
+# Parcourir chaque fichier de segmentation dans l'ordre de la liste subject_list
+    for seg_filename in tqdm(subject_list):
+        if seg_filename.endswith('_seg.nii.gz'):  # Assurez-vous de filtrer les fichiers de segmentations spécifiques
+        # Construire le chemin complet vers le fichier de segmentation
+            seg_path = os.path.join(seg_dir, seg_filename)
+
+        # Charger les données de segmentation
+        seg_data = nib.load(seg_path).get_fdata()
+    #seg_file = "/scratch/saiterrami/seg/lh_seg.nii.gz"
+    #seg_file_rh = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
     
-    seg_file = "/scratch/saiterrami/seg/lh_seg.nii.gz"
-    seg_file_rh = "/scratch/saiterrami/seg/lh_segmentation1.nii.gz"
-    
-    seg_data_rh = nib.load(seg_file_rh).get_fdata()
+    #seg_data_rh = nib.load(seg_file_rh).get_fdata()
 
 
     #print(seg_file)
 
 # Load the segmentation data
-    seg_data = nib.load(seg_file).get_fdata()
+    #seg_data = nib.load(seg_file).get_fdata()
     
 
     
