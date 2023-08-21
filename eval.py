@@ -239,6 +239,7 @@ if __name__ == '__main__':
 
         # ------- evaluation -------
         if test_type == 'eval':
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
