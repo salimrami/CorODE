@@ -186,7 +186,7 @@ if __name__ == '__main__':
     
     
     
-    print("taille de la seg",seg_data_rh.shape)
+            print("taille de la seg",seg_data_rh.shape)
     
 
     if test_type == 'pred' or test_type == 'eval':
