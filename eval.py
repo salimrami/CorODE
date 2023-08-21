@@ -239,16 +239,15 @@ if __name__ == '__main__':
 
         # ------- evaluation -------
         if test_type == 'eval':
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
 
-            v_wm_gt = torch.Tensor(v_in)
-            f_wm_gt = torch.LongTensor(f_in)
-            v_gm_gt = torch.Tensor(v_gm_in)
-            f_gm_gt = torch.LongTensor(f_in)
+            v_wm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
+            f_wm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
+            v_gm_gt = torch.Tensor(v_gm_in).unsqueeze(0).to(device)
+            f_gm_gt = torch.LongTensor(f_in.astype(np.float32)).unsqueeze(0).to(device)
 
             # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
