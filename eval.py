@@ -394,7 +394,7 @@ if __name__ == '__main__':
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
-
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             v_wm_gt = torch.Tensor(v_in).unsqueeze(0).unsqueeze(0).to(device)
             f_wm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
             v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
