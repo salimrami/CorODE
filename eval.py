@@ -390,36 +390,41 @@ if __name__ == '__main__':
         
         # ------- evaluation -------
         if test_type == 'eval':
+            
+    # Choose the appropriate device
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
             v_wm_pred = torch.Tensor(v_wm_pred).unsqueeze(0).to(device)
             f_wm_pred = torch.LongTensor(f_wm_pred).unsqueeze(0).to(device)
             v_gm_pred = torch.Tensor(v_gm_pred).unsqueeze(0).to(device)
             f_gm_pred = torch.LongTensor(f_gm_pred).unsqueeze(0).to(device)
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
             v_wm_gt = torch.Tensor(v_in).unsqueeze(0).unsqueeze(0).to(device)
             f_wm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
             v_gm_gt = torch.Tensor(v_in).unsqueeze(0).to(device)
             f_gm_gt = torch.LongTensor(f_in).unsqueeze(0).to(device)
 
-            # compute ASSD and HD
+    # compute ASSD and HD
             assd_wm, hd_wm = compute_mesh_distance(v_wm_pred, v_wm_gt, f_wm_pred, f_wm_gt)
             assd_gm, hd_gm = compute_mesh_distance(v_gm_pred, v_gm_gt, f_gm_pred, f_gm_gt)
             if data_name == 'fetal':  # the resolution is 0.7
-                assd_wm = 0.7*assd_wm
-                assd_gm = 0.7*assd_gm
-                hd_wm = 0.7*hd_wm
-                hd_gm = 0.7*hd_gm
+                assd_wm = 0.7 * assd_wm
+                assd_gm = 0.7 * assd_gm
+                hd_wm = 0.7 * hd_wm
+                hd_gm = 0.7 * hd_gm
             assd_wm_all.append(assd_wm)
             assd_gm_all.append(assd_gm)
             hd_wm_all.append(hd_wm)
             hd_gm_all.append(hd_gm)
 
-            ### compute percentage of self-intersecting faces
-            ### uncomment below if you have installed torch-mesh-isect
-            ### https://github.com/vchoutas/torch-mesh-isect
-            # sif_wm_all.append(check_self_intersect(v_wm_pred, f_wm_pred, collisions=20))
-            # sif_gm_all.append(check_self_intersect(v_gm_pred, f_gm_pred, collisions=20))
+    ### compute percentage of self-intersecting faces
+    ### uncomment below if you have installed torch-mesh-isect
+    ### https://github.com/vchoutas/torch-mesh-isect
+    # sif_wm_all.append(check_self_intersect(v_wm_pred, f_wm_pred, collisions=20))
+    # sif_gm_all.append(check_self_intersect(v_gm_pred, f_gm_pred, collisions=20))
             sif_wm_all.append(0)
             sif_gm_all.append(0)
+
 
     # ------- report the final results ------- 
     if test_type == 'eval':
