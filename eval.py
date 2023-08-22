@@ -371,11 +371,11 @@ if __name__ == '__main__':
             #mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
             #mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
 
-            # save the surfaces in FreeSurfer format
-            #nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
-             #                                v_wm_pred, f_wm_pred)
-            #nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
-              #                               v_gm_pred, f_gm_pred)
+            #save the surfaces in FreeSurfer format
+            nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
+                                             v_wm_pred, f_wm_pred)
+            nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
+                                             v_gm_pred, f_gm_pred)
             white_gii = gifti.GiftiImage()
             white_data = gifti.GiftiDataArray(v_wm_pred, intent='NIFTI_INTENT_POINTSET')
             white_faces = gifti.GiftiDataArray(f_wm_pred, intent='NIFTI_INTENT_TRIANGLE')
