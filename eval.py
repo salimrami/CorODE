@@ -159,8 +159,8 @@ if __name__ == '__main__':
 
     # ------ load models ------
     
-    seg_file = "/scratch/saiterrami/seg/l-seg.nii.gz"
-    seg_file_rh = "/scratch/saiterrami/seg/l-seg.nii.gz"
+    seg_file = "/scratch/saiterrami/seg/left.nii.gz"
+    seg_file_rh = "/scratch/saiterrami/seg/left.nii.gz"
     
     seg_data_rh = nib.load(seg_file_rh).get_fdata()
 
@@ -316,6 +316,14 @@ if __name__ == '__main__':
             #v_in, f_in = process_surface_inverse(v_in, f_in, data_name)
             mesh_init.export(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
             #v_in, f_in = process_surface(v_in, f_in, data_name)
+            mesh_init = trimesh.Trimesh(v_in, f_in)
+            mesh_init.export('/scratch/saiterrami/init/init.obj')
+            nib.freesurfer.io.write_geometry(result_dir+data_name+'init''_''.white',
+                                            v_in, f_in)
+            gii = nib.gifti.GiftiImage()
+            gii.add_gifti_data_array(nib.gifti.GiftiDataArray(v_in, intent='NIFTI_INTENT_POINTSET'))
+            gii.add_gifti_data_array(nib.gifti.GiftiDataArray(f_in, intent='NIFTI_INTENT_TRIANGLE'))
+            nib.save(gii, result_dir + data_name + 'init' + '_init.gii')
             
             #mesh_in = trimesh.Trimesh(v_in, f_in)
             #mesh_in.export(result_dir+'in_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
